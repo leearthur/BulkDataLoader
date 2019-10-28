@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BulkDataLoader": {
+      "commandName": "Project",
+      "commandLineArgs": "-Generate ActiveCalls 10"
+    }
+  }
+}

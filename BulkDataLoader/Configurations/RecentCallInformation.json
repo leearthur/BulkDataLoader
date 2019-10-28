@@ -1,0 +1,31 @@
+{
+    "name": "recentcallinformation",
+    "tableName": "agents.recentcallinformation",
+    "columns": [
+      {
+        "name": "AgentUuid",
+        "type": "value",
+        "value": "1356185"
+      },
+      {
+        "name": "CallUuid",
+        "type": "guid",
+        "value": "INDEXED"
+      },
+      {
+        "name": "CallType",
+        "type": "numeric",
+        "value": 0
+      },
+      {
+        "name": "CallCentreNumber",
+        "type": "string",
+        "value": "TestCallPlan1"
+      },
+      {
+        "name": "CustomerNumber",
+        "type": "string",
+        "value": "00441252##RANDOM(10000, 90000)##0"
+      }
+    ]
+  }

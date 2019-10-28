@@ -1,0 +1,26 @@
+﻿{
+  "name": "callrecordingcomment",
+  "tableName": "routing.callrecordingcomment",
+  "columns": [
+    {
+      "name": "CallGuid",
+      "type": "guid"
+    },
+    {
+      "name": "Text",
+      "type": "string",
+      "value": "[Auto generated comment (##INDEX##)]"
+    },
+    {
+
+      "name": "CreatedBy",
+      "type": "numeric",
+      "value": 1
+    },
+    {
+      "name": "CreatedAt",
+      "type": "date",
+      "value": "NOW"
+    }
+  ]
+}

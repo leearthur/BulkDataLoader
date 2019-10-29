@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using BulkDataLoader.DataWriters;
@@ -33,10 +32,10 @@ namespace BulkDataLoader.Tasks
         {
             Log.Information("Starting data generation...");
 
-            var writer = DataWriter.GetInstance(Configuration, _outputType, GetApplicationSetting("OutputFileLocation"));
+            var writer = DataHandler.GetInstance(Configuration, _outputType, GetApplicationSetting("OutputFileLocation"));
             var data = _dataGenerator.GenerateRows(_count, writer.QuoteCharacter);
 
-            await writer.Write(data, $"{Configuration.FileName ?? Configuration.Name}_data", _fileMode);
+            await writer.Write(data, _fileMode);
 
             Log.Information("Data generation complete");
         }

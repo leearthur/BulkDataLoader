@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -7,15 +8,15 @@ using Serilog;
 
 namespace BulkDataLoader.DataWriters
 {
-    public class SqlDataWriter : DataWriter
+    public class SqlDataHandler : DataHandler
     {
         public override string FileExtension => "sql";
 
         public override char QuoteCharacter => '\'';
 
-        public override async Task Write(IEnumerable<DataRow> data, string fileName, FileMode fileMode)
+        public override async Task Write(IEnumerable<DataRow> data, FileMode fileMode)
         {
-            var outputFile = GetFileInfo(fileName);
+            var outputFile = GetFileInfo(true);
             Log.Information($"[ ] Writing CSV file {outputFile.FullName}");
 
             using (var stream = outputFile.Open(fileMode, FileAccess.Write))
@@ -46,5 +47,11 @@ namespace BulkDataLoader.DataWriters
                 await stream.WriteAsync(bytes);
             }
         }
+
+        public override Task Load(string connectionString)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

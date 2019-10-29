@@ -10,10 +10,6 @@ namespace BulkDataLoader.Tasks
     {
         public override bool DisplayExecutionTime { get; } = false;
 
-        public SettingsTask()
-        {
-        }
-
         public override async Task Execute()
         {
             var secureLocation = await GetSecureLocation();

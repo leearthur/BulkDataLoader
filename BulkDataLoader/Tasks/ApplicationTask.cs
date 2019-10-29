@@ -36,7 +36,7 @@ namespace BulkDataLoader.Tasks
                     return new GenerateDataTask(Configuration.Load(args[1]), args.Skip(2));
 
                 case "-load": 
-                    return new BulkLoadTask();
+                    return new DataLoadTask(Configuration.Load(args[1]), args.Skip(2));
 
                 case "-create":
                     return new CreateConfigurationTask(new Configuration
@@ -62,25 +62,9 @@ namespace BulkDataLoader.Tasks
             return ConfigurationManager.AppSettings[name];
         }
 
-        protected string GetFileName(OutputType outputType)
-        {
-            return $"{Configuration.FileName ?? Configuration.Name}_data.{GetFileExtension(outputType)}";
-        }
-
         protected bool SettingExists(string name)
         {
             return Settings.Any(a => a.Equals($"-{name}", StringComparison.InvariantCultureIgnoreCase));
         }
-
-        private static string GetFileExtension(OutputType outputType)
-        {
-            switch (outputType)
-            {
-                case OutputType.Csv: return "csv";
-                case OutputType.Sql: return "sql";
-                default: return null;
-            }
-        }
-
     }
 }

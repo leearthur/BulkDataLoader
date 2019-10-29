@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace BulkDataLoader.DataWriters
 {
-    public abstract class DataWriter
+    public abstract class DataHandler
     {
         public abstract string FileExtension { get; }
         public abstract char QuoteCharacter { get; }
@@ -13,7 +13,8 @@ namespace BulkDataLoader.DataWriters
         public Configuration Configuration { get; private set; }
         public DirectoryInfo OutputDirectory { get; private set;  }
 
-        public abstract Task Write(IEnumerable<DataRow> data, string fileName, FileMode fileMode);
+        public abstract Task Write(IEnumerable<DataRow> data, FileMode fileMode);
+        public abstract Task Load(string connectionString);
 
         protected void Init(Configuration configuration, string outputDirectory)
         {
@@ -21,7 +22,7 @@ namespace BulkDataLoader.DataWriters
             OutputDirectory = new DirectoryInfo(outputDirectory);
         }
 
-        public static DataWriter GetInstance(Configuration configuration, OutputType outputType, string outputDirectory)
+        public static DataHandler GetInstance(Configuration configuration, OutputType outputType, string outputDirectory)
         {
             var instance = GetTypeIstance(outputType);
             instance.Init(configuration, outputDirectory);
@@ -29,22 +30,23 @@ namespace BulkDataLoader.DataWriters
             return instance;
         }
 
-        protected FileInfo GetFileInfo(string fileName)
+        protected FileInfo GetFileInfo(bool createDirectory = false)
         {
-            if (!OutputDirectory.Exists)
+            if (createDirectory && !OutputDirectory.Exists)
             {
                 OutputDirectory.Create();
             }
 
+            var fileName = $"{Configuration.FileName ?? Configuration.Name}_data";
             return new FileInfo($@"{OutputDirectory}\{fileName}.{FileExtension}");
         }
 
-        private static DataWriter GetTypeIstance(OutputType outputType)
+        private static DataHandler GetTypeIstance(OutputType outputType)
         {
             switch (outputType)
             {
-                case OutputType.Csv: return new CsvDataWriter();
-                case OutputType.Sql: return new SqlDataWriter();
+                case OutputType.Csv: return new CsvDataHandler();
+                case OutputType.Sql: return new SqlDataHandler();
             }
 
             throw new InvalidEnumArgumentException($"Invalid OutputType '{outputType.ToString()}' specified.");

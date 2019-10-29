@@ -7,10 +7,6 @@ namespace BulkDataLoader.Tasks
     {
         public override bool DisplayExecutionTime { get; } = false;
 
-        public HelpTask()
-        {
-        }
-
         public override Task Execute()
         {
             const string helpText = "\n" +

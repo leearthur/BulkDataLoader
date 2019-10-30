@@ -1,7 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
+using BulkDataLoader.Tasks;
+using Dapper;
+using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -39,6 +45,27 @@ namespace BulkDataLoader
                 });
 
                 return config;
+            }
+        }
+
+        public MySqlConnection GetConnection(string name)
+        {
+            return new MySqlConnection(ConfigurationManager.ConnectionStrings[name].ConnectionString);
+        }
+
+        public string GetApplicationSetting(string name)
+        {
+            return ConfigurationManager.AppSettings[name];
+        }
+
+        public async Task<string> GetSecureLocation()
+        {
+            using (var connection = GetConnection("CallCentreDb"))
+            {
+                const string sql = "SHOW VARIABLES LIKE 'secure_file_priv'";
+                var result = (await connection.QueryAsync<MySqlVariable>(sql)).FirstOrDefault();
+
+                return result?.Value;
             }
         }
     }

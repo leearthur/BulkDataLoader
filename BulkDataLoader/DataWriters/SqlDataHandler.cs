@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dapper;
 using Serilog;
 
 namespace BulkDataLoader.DataWriters
@@ -48,10 +48,17 @@ namespace BulkDataLoader.DataWriters
             }
         }
 
-        public override Task Load(string connectionString)
+        public override async Task Load()
         {
-            throw new NotImplementedException();
-        }
+            using (var connection = Configuration.GetConnection("CallCentreDb"))
+            {
+                var file = GetFileInfo();
+                var sql = File.ReadAllText(file.FullName);
 
+                Log.Information($"[ ] Loading data from SQL file {file.FullName}");
+
+                await connection.ExecuteAsync(sql);
+            }
+        }
     }
 }

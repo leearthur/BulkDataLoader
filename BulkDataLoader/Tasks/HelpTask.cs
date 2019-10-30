@@ -5,6 +5,11 @@ namespace BulkDataLoader.Tasks
 {
     public class HelpTask : ApplicationTask
     {
+        public HelpTask()
+            : base(null, null)
+        {
+        }
+
         public override bool DisplayExecutionTime { get; } = false;
 
         public override Task Execute()

@@ -1,31 +1,23 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Dapper;
-using MySql.Data.MySqlClient;
 using Serilog;
 
 namespace BulkDataLoader.Tasks
 {
     public class SettingsTask : ApplicationTask
     {
+        public SettingsTask(Configuration configuration, IEnumerable<string> settings)
+            : base(configuration, settings)
+        {
+        }
+
         public override bool DisplayExecutionTime { get; } = false;
 
         public override async Task Execute()
         {
-            var secureLocation = await GetSecureLocation();
+            var secureLocation = await Configuration.GetSecureLocation();
             Log.Information($"MySQL Secure Location: {secureLocation}");
-            Log.Information($"Output Location: {GetApplicationSetting("OutputFileLocation")}");
-        }
-
-        public async Task<string> GetSecureLocation()
-        {
-            using (var connection = new MySqlConnection(GetConnectionString("CallCentreDb")))
-            {
-                const string sql = "SHOW VARIABLES LIKE 'secure_file_priv'";
-                var result = (await connection.QueryAsync<MySqlVariable>(sql)).FirstOrDefault();
-
-                return result?.Value;
-            }
+            Log.Information($"Output Location: { Configuration.GetApplicationSetting("OutputFileLocation")}");
         }
     }
 

@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
-using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Serilog;
@@ -52,7 +51,7 @@ namespace BulkDataLoader.Tasks
                 "WHERE TABLE_SCHEMA = @schema " +
                 "AND TABLE_NAME = @table;";
 
-            using (var connection = new MySqlConnection(GetConnectionString("CallCentreDb")))
+            using (var connection = Configuration.GetConnection("CallCentreDb"))
             {
                 return await connection.QueryAsync<SchemaColumn>(sql, new {schema, table});
             }

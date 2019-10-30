@@ -32,7 +32,7 @@ namespace BulkDataLoader.Tasks
         {
             Log.Information("Starting data generation...");
 
-            var writer = DataHandler.GetInstance(Configuration, _outputType, GetApplicationSetting("OutputFileLocation"));
+            var writer = DataHandler.GetInstance(Configuration, _outputType, Configuration.GetApplicationSetting("OutputFileLocation"));
             var data = _dataGenerator.GenerateRows(_count, writer.QuoteCharacter);
 
             await writer.Write(data, _fileMode);

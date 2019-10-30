@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,14 +9,7 @@ namespace BulkDataLoader.Tasks
     {
         public Configuration Configuration { get; }
         public string[] Settings { get; }
-
         public virtual bool DisplayExecutionTime { get; } = true;
-
-        protected ApplicationTask()
-        {
-            Configuration = new Configuration();
-            Settings = new string[0];
-        }
 
         protected ApplicationTask(Configuration configuration, IEnumerable<string> settings)
         {
@@ -45,21 +37,11 @@ namespace BulkDataLoader.Tasks
                     }, args.Skip(2));
 
                 case "-settings": 
-                    return new SettingsTask();
+                    return new SettingsTask(Configuration.Load(args[1]), args.Skip(1));
 
                 default:
                     return new HelpTask();
             }
-        }
-
-        protected string GetConnectionString(string name)
-        {
-            return ConfigurationManager.ConnectionStrings[name].ConnectionString;
-        }
-
-        protected string GetApplicationSetting(string name)
-        {
-            return ConfigurationManager.AppSettings[name];
         }
 
         protected bool SettingExists(string name)

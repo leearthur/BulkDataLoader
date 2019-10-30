@@ -30,11 +30,10 @@ namespace BulkDataLoader.DataWriters
             }
         }
 
-        public override async Task Load(string connectionString)
+        public override async Task Load()
         {
-            using (var connection = new MySqlConnection(connectionString))
+            using (var connection = Configuration.GetConnection("CallCentreDb"))
             {
-                //var secureLocation = await SettingsTask.GetSecureLocation();
                 var loader = new MySqlBulkLoader(connection)
                 {
                     FileName = $@"{GetFileInfo().FullName}",
@@ -45,7 +44,7 @@ namespace BulkDataLoader.DataWriters
                 };
                 loader.Columns.AddRange(Configuration.Columns.Select(col => col.Name));
 
-                Log.Information($"[ ] Loading data from file {loader.FileName}");
+                Log.Information($"[ ] Bulk loading data from file {loader.FileName}");
 
                 connection.Open();
                 await loader.LoadAsync();

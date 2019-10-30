@@ -14,7 +14,7 @@ namespace BulkDataLoader.DataWriters
         public DirectoryInfo OutputDirectory { get; private set;  }
 
         public abstract Task Write(IEnumerable<DataRow> data, FileMode fileMode);
-        public abstract Task Load(string connectionString);
+        public abstract Task Load();
 
         protected void Init(Configuration configuration, string outputDirectory)
         {

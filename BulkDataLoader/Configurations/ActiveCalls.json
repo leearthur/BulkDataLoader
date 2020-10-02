@@ -20,7 +20,10 @@
     {
       "name": "AccountId",
       "type": "numeric",
-      "value": 1251
+      "properties": {
+        "minValue": 1000,
+        "maxValue": 1500 
+      }
     },
     {
       "name": "ConversationGuid",

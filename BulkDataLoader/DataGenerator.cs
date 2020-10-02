@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using BulkDataLoader.Lists;
@@ -11,13 +10,15 @@ namespace BulkDataLoader
     public class DataGenerator
     {
         private readonly Configuration _configuration;
+        private readonly OutputType _outputType;
         private readonly Regex _randomRegex;
         private readonly Random _random;
         private readonly ListCollection _listCollection;
 
-        public DataGenerator(Configuration configuration)
+        public DataGenerator(Configuration configuration, OutputType outputType)
         {
             _configuration = configuration;
+            _outputType = outputType;
             _randomRegex = new Regex(@"##RANDOM\((\d+),\s*(\d+)\)##");
             _random = new Random();
             _listCollection = new ListCollection();
@@ -43,7 +44,7 @@ namespace BulkDataLoader
         {
             switch (column.Type)
             {
-                case "string": return $"{quote}{GetFixedValue(column, lineIndex)}{quote}";
+                case "string": return $"{quote}{GetStringValue(column, lineIndex)}{quote}";
                 case "date": return $"{quote}{GetDateTime(column)}{quote}";
                 case "guid": return $"{quote}{GenerateGuid(column, lineIndex)}{quote}";
                 case "numeric": return GetNumericValue(column, lineIndex);
@@ -87,6 +88,14 @@ namespace BulkDataLoader
             return _random.Next(minValue, maxValue).ToString();
         }
 
+        private string GetStringValue(Column column, int index)
+        {
+            var value = GetFixedValue(column, index);
+            return _outputType == OutputType.Sql
+                ? SqlParse(value)
+                : value;
+        }
+
         private string GetFixedValue(Column column, int index)
         {
             var value = column.Value
@@ -110,10 +119,12 @@ namespace BulkDataLoader
 
             foreach (var listName in items)
             {
-                value = value.Replace(listName, SqlParse(_listCollection.Get(listName[1..^1])));
+                value = value.Replace(listName, _listCollection.Get(listName[1..^1]));
             }
 
-            return value;
+            return _outputType == OutputType.Sql
+                ? SqlParse(value)
+                : value;
         }
 
         private string GetIndexValue(Column column, int index)

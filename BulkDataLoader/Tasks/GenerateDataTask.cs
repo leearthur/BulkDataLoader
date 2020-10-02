@@ -16,7 +16,6 @@ namespace BulkDataLoader.Tasks
         public GenerateDataTask(Configuration configuration, IEnumerable<string> settings)
             : base(configuration, settings)
         {
-            _dataGenerator = new DataGenerator(configuration);
             _count = int.Parse(Settings[0]);
 
             _fileMode = SettingExists("Append")
@@ -26,6 +25,8 @@ namespace BulkDataLoader.Tasks
             _outputType = SettingExists("Sql")
                 ? OutputType.Sql
                 : OutputType.Csv;
+
+            _dataGenerator = new DataGenerator(configuration, _outputType);
         }
 
         public override async Task Execute()

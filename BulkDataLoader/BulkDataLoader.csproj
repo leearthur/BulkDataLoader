@@ -23,6 +23,12 @@
     <None Update="Configurations\CallRecordingComment.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Configurations\Encoding.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Configurations\Employees.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Configurations\RecentCallInformation.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

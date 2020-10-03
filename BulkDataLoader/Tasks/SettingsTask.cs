@@ -13,7 +13,7 @@ namespace BulkDataLoader.Tasks
 
         public override bool DisplayExecutionTime { get; } = false;
 
-        public override async Task Execute()
+        public override async Task ExecuteAsync()
         {
             var secureLocation = await Configuration.GetSecureLocation();
             Log.Information($"MySQL Secure Location: {secureLocation}");

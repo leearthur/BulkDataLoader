@@ -12,7 +12,7 @@ namespace BulkDataLoader.Tasks
 
         public override bool DisplayExecutionTime { get; } = false;
 
-        public override Task Execute()
+        public override Task ExecuteAsync()
         {
             const string helpText = "\n" +
                 "Usage dotnet BulkDataLoader.dll [-{task-name}]\n" +

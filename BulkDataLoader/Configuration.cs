@@ -27,7 +27,7 @@ namespace BulkDataLoader
             return new FileInfo(Assembly.GetExecutingAssembly().Location).Directory;
         }
 
-        public static Configuration Load(string name)
+        public static async Task<Configuration> Load(string name)
         {
             var configFile = new FileInfo($@"{GetLocation()}\Configurations\{name}.json");
 
@@ -36,16 +36,15 @@ namespace BulkDataLoader
                 throw  new ArgumentException($"Specified configuration '{name}' does not exist.");
             }
 
-            using (var stream = configFile.OpenText())
+            using var stream = configFile.OpenText();
+            
+            var configJson = await stream.ReadToEndAsync();
+            var config = JsonConvert.DeserializeObject<Configuration>(configJson, new JsonSerializerSettings
             {
-                var configJson = stream.ReadToEnd();
-                var config = JsonConvert.DeserializeObject<Configuration>(configJson, new JsonSerializerSettings
-                {
-                    ContractResolver = new CamelCasePropertyNamesContractResolver()
-                });
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
 
-                return config;
-            }
+            return config;
         }
 
         public MySqlConnection GetConnection(string name)
@@ -60,13 +59,12 @@ namespace BulkDataLoader
 
         public async Task<string> GetSecureLocation()
         {
-            using (var connection = GetConnection("CallCentreDb"))
-            {
-                const string sql = "SHOW VARIABLES LIKE 'secure_file_priv'";
-                var result = (await connection.QueryAsync<MySqlVariable>(sql)).FirstOrDefault();
+            using var connection = GetConnection("CallCentreDb");
+            
+            const string sql = "SHOW VARIABLES LIKE 'secure_file_priv'";
+            var result = (await connection.QueryAsync<MySqlVariable>(sql)).FirstOrDefault();
 
-                return result?.Value;
-            }
+            return result?.Value;
         }
     }
 

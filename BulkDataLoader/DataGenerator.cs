@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using BulkDataLoader.Lists;
 using Serilog;
 
@@ -24,11 +25,11 @@ namespace BulkDataLoader
             _listCollection = new ListCollection();
         }
 
-        public IEnumerable<DataRow> GenerateRows(int count, char quote)
+        public async Task<IEnumerable<DataRow>> GenerateRowsAsync(int count, char quote)
         {
             Log.Information($"[ ] Generating {count} records for {_configuration.Name}");
 
-            _listCollection.Load(_configuration);
+            await _listCollection.LoadAsync(_configuration);
 
             var data = new List<DataRow>();
             for (var index = 0; index < count; index++)
@@ -42,27 +43,26 @@ namespace BulkDataLoader
 
         private string GenerateValue(Column column, int lineIndex, char quote)
         {
-            switch (column.Type)
+            return column.Type switch
             {
-                case "string": return $"{quote}{GetStringValue(column, lineIndex)}{quote}";
-                case "date": return $"{quote}{GetDateTime(column)}{quote}";
-                case "guid": return $"{quote}{GenerateGuid(column, lineIndex)}{quote}";
-                case "numeric": return GetNumericValue(column, lineIndex);
-                case "list": return $"{quote}{GetListValue(column, lineIndex)}{quote}";
-                default:
-                    throw new ArgumentException($"Unkown parameter type '{column.Type}' for column '{column.Name}' in configuration '{_configuration.Name}'.");
-            }
+                "string" => $"{quote}{GetStringValue(column, lineIndex)}{quote}",
+                "date" => $"{quote}{GetDateTime(column)}{quote}",
+                "guid" => $"{quote}{GenerateGuid(column, lineIndex)}{quote}",
+                "numeric" => GetNumericValue(column, lineIndex),
+                "list" => $"{quote}{GetListValue(column, lineIndex)}{quote}",
+                _ => throw new ArgumentException($"Unkown parameter type '{column.Type}' for column '{column.Name}' in configuration '{_configuration.Name}'."),
+            };
         }
 
         private static string GetDateTime(Column column)
         {
             const string dateFormat = "yyyy-MM-dd HH:mm:ss";
 
-            switch (column.Value.ToString().ToUpper())
+            return (column.Value.ToString().ToUpper()) switch
             {
-                case "NOW": return DateTime.Now.ToString(dateFormat);
-                default: return DateTime.Parse(column.Value.ToString()).ToString(dateFormat);
-            }
+                "NOW" => DateTime.Now.ToString(dateFormat),
+                _ => DateTime.Parse(column.Value.ToString()).ToString(dateFormat),
+            };
         }
 
         private static string GenerateGuid(Column column, int index)

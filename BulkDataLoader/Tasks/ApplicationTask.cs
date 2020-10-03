@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace BulkDataLoader.Tasks
 {
-    public abstract class ApplicationTask : ITask
+    public abstract class ApplicationTask : IApplicationTask
     {
         public Configuration Configuration { get; }
         public string[] Settings { get; }
@@ -17,31 +17,22 @@ namespace BulkDataLoader.Tasks
             Settings = settings?.ToArray() ?? new string[0];
         }
 
-        public abstract Task Execute();
+        public abstract Task ExecuteAsync();
 
-        public static ITask GetTaskInstance(string[] args)
+        public static async Task<IApplicationTask> GetTaskInstanceAsync(string[] args)
         {
             var taskName = args.Length > 0 ? args[0].ToLower() : null;
-            switch (taskName)
+            return taskName switch
             {
-                case "-generate":
-                    return new GenerateDataTask(Configuration.Load(args[1]), args.Skip(2));
-
-                case "-load": 
-                    return new DataLoadTask(Configuration.Load(args[1]), args.Skip(2));
-
-                case "-create":
-                    return new CreateConfigurationTask(new Configuration
+                "-generate" => new GenerateDataTask(await Configuration.Load(args[1]), args.Skip(2)),
+                "-load" => new DataLoadTask(await Configuration.Load(args[1]), args.Skip(2)),
+                "-create" => new CreateConfigurationTask(new Configuration
                     {
                         TableName = args[1]
-                    }, args.Skip(2));
-
-                case "-settings": 
-                    return new SettingsTask(Configuration.Load(args[1]), args.Skip(1));
-
-                default:
-                    return new HelpTask();
-            }
+                    }, args.Skip(2)),
+                "-settings" => new SettingsTask(await Configuration.Load(args[1]), args.Skip(1)),
+                _ => new HelpTask(),
+            };
         }
 
         protected bool SettingExists(string name)

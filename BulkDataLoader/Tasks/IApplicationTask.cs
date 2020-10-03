@@ -2,10 +2,10 @@
 
 namespace BulkDataLoader.Tasks
 {
-    public interface ITask
+    public interface IApplicationTask
     {
         bool DisplayExecutionTime { get; }
 
-        Task Execute();
+        Task ExecuteAsync();
     }
 }

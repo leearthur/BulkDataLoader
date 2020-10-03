@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 
 namespace BulkDataLoader
@@ -14,10 +13,7 @@ namespace BulkDataLoader
             }
 
             var value = properties[name].ToString();
-
             return JsonConvert.DeserializeObject<T>(value);
-
-            //return (T)Convert.ChangeType(value, typeof(T));
         }
     }
 }

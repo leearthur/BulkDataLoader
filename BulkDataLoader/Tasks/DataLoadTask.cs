@@ -17,7 +17,7 @@ namespace BulkDataLoader.Tasks
                 : OutputType.Csv;
         }
 
-        public override async Task Execute()
+        public override async Task ExecuteAsync()
         {
             Log.Information("Starting bulk data load...");
 
@@ -34,7 +34,7 @@ namespace BulkDataLoader.Tasks
                 
             var handler = DataHandler.GetInstance(Configuration, _outputType, outputDirectory);
 
-            await handler.Load();
+            await handler.LoadAsync();
         }
     }
 }

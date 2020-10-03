@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace BulkDataLoader.Lists
 {
@@ -13,7 +14,7 @@ namespace BulkDataLoader.Lists
         public Dictionary<string, IEnumerable<string>> Lists { get; } = new Dictionary<string, IEnumerable<string>>();
         private Random _random = new Random();
 
-        public void Load(Configuration configuration)
+        public async Task LoadAsync(Configuration configuration)
         {
             var lists = configuration.Columns
                 .Where(c => c.Type == "list")
@@ -22,11 +23,11 @@ namespace BulkDataLoader.Lists
 
             foreach (var list in lists)
             {
-                Load(list[1..^1]);
+                await LoadAsync(list[1..^1]);
             }
         }
 
-        public void Load(string name)
+        public async Task LoadAsync(string name)
         {
             var configFile = new FileInfo($@"{GetLocation()}\Lists\{name}.json");
 
@@ -40,13 +41,12 @@ namespace BulkDataLoader.Lists
                 Lists.Remove(name);
             }
 
-            using (var stream = configFile.OpenText())
-            {
-                var listJson = stream.ReadToEnd();
-                var list = JsonConvert.DeserializeObject<IEnumerable<string>>(listJson);
+            using var stream = configFile.OpenText();
+            
+            var listJson = await stream.ReadToEndAsync();
+            var list = JsonConvert.DeserializeObject<IEnumerable<string>>(listJson);
 
-                Lists.Add(name, list);
-            }
+            Lists.Add(name, list);
         }
 
         public string Get(string listName)

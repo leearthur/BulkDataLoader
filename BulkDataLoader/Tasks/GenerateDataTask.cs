@@ -29,14 +29,14 @@ namespace BulkDataLoader.Tasks
             _dataGenerator = new DataGenerator(configuration, _outputType);
         }
 
-        public override async Task Execute()
+        public override async Task ExecuteAsync()
         {
             Log.Information("Starting data generation...");
 
             var writer = DataHandler.GetInstance(Configuration, _outputType, Configuration.GetApplicationSetting("OutputFileLocation"));
-            var data = _dataGenerator.GenerateRows(_count, writer.QuoteCharacter);
+            var data = await _dataGenerator.GenerateRowsAsync(_count, writer.QuoteCharacter);
 
-            await writer.Write(data, _fileMode);
+            await writer.WriteAsync(data, _fileMode);
 
             Log.Information("Data generation complete");
         }

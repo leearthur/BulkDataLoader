@@ -8,7 +8,7 @@ namespace BulkDataLoader
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             try
             {
@@ -16,11 +16,11 @@ namespace BulkDataLoader
                     .WriteTo.Console()
                     .CreateLogger();
 
-                var task = ApplicationTask.GetTaskInstance(args);
+                var task = await ApplicationTask.GetTaskInstanceAsync(args);
                 var timer = new Stopwatch();
 
                 timer.Start();
-                Task.Run(() => task.Execute()).GetAwaiter().GetResult();
+                await task.ExecuteAsync();
                 timer.Stop();
 
                 if (task.DisplayExecutionTime)

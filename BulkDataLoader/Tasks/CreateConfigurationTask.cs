@@ -22,7 +22,7 @@ namespace BulkDataLoader.Tasks
             Overwrite = SettingExists("Overwrite");
         }
 
-        public override async Task Execute()
+        public override async Task ExecuteAsync()
         {
             Log.Information("Starting configuration creation...");
 

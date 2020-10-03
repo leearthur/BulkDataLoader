@@ -13,8 +13,8 @@ namespace BulkDataLoader.DataWriters
         public Configuration Configuration { get; private set; }
         public DirectoryInfo OutputDirectory { get; private set;  }
 
-        public abstract Task Write(IEnumerable<DataRow> data, FileMode fileMode);
-        public abstract Task Load();
+        public abstract Task WriteAsync(IEnumerable<DataRow> data, FileMode fileMode);
+        public abstract Task LoadAsync();
 
         protected void Init(Configuration configuration, string outputDirectory)
         {
@@ -43,13 +43,12 @@ namespace BulkDataLoader.DataWriters
 
         private static DataHandler GetTypeIstance(OutputType outputType)
         {
-            switch (outputType)
+            return outputType switch
             {
-                case OutputType.Csv: return new CsvDataHandler();
-                case OutputType.Sql: return new SqlDataHandler();
-            }
-
-            throw new InvalidEnumArgumentException($"Invalid OutputType '{outputType.ToString()}' specified.");
+                OutputType.Csv => new CsvDataHandler(),
+                OutputType.Sql => new SqlDataHandler(),
+                _ => throw new InvalidEnumArgumentException($"Invalid OutputType '{outputType}' specified."),
+            };
         }
     }
 }

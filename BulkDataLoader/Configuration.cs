@@ -57,9 +57,9 @@ namespace BulkDataLoader
             return ConfigurationManager.AppSettings[name];
         }
 
-        public async Task<string> GetSecureLocation()
+        public async Task<string> GetSecureLocationAsync()
         {
-            using var connection = GetConnection("CallCentreDb");
+            using var connection = GetConnection("DatabaseConnectionString");
             
             const string sql = "SHOW VARIABLES LIKE 'secure_file_priv'";
             var result = (await connection.QueryAsync<MySqlVariable>(sql)).FirstOrDefault();

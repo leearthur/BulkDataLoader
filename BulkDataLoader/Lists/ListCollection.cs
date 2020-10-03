@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -41,8 +42,8 @@ namespace BulkDataLoader.Lists
                 Lists.Remove(name);
             }
 
-            using var stream = configFile.OpenText();
-            
+            using var stream = new StreamReader(configFile.FullName, Encoding.UTF8);
+
             var listJson = await stream.ReadToEndAsync();
             var list = JsonConvert.DeserializeObject<IEnumerable<string>>(listJson);
 

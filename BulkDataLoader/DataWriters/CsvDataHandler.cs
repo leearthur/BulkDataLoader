@@ -31,7 +31,7 @@ namespace BulkDataLoader.DataWriters
 
         public override async Task LoadAsync()
         {
-            using var connection = Configuration.GetConnection("CallCentreDb");
+            using var connection = Configuration.GetConnection("DatabaseConnectionString");
             
             var loader = new MySqlBulkLoader(connection)
             {
@@ -40,6 +40,7 @@ namespace BulkDataLoader.DataWriters
                 FieldQuotationCharacter = '"',
                 LineTerminator = Environment.NewLine,
                 TableName = Configuration.TableName,
+                CharacterSet = "utf8"
             };
             loader.Columns.AddRange(Configuration.Columns.Select(col => col.Name));
 

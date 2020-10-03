@@ -21,16 +21,16 @@ namespace BulkDataLoader.Tasks
         {
             Log.Information("Starting bulk data load...");
 
-            await LoadData();
+            await LoadDataAsync();
 
             Log.Information("Bulk data load complete");
         }
 
-        private async Task LoadData()
+        private async Task LoadDataAsync()
         {
             var outputDirectory = _outputType == OutputType.Sql
                 ? Configuration.GetApplicationSetting("OutputFileLocation")
-                : await Configuration.GetSecureLocation();
+                : await Configuration.GetSecureLocationAsync();
                 
             var handler = DataHandler.GetInstance(Configuration, _outputType, outputDirectory);
 

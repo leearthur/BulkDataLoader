@@ -37,7 +37,7 @@ namespace BulkDataLoader.Tasks
                 Type = MapDataType(col.DataType)
             });
 
-            if (await WriteConfiguration())
+            if (await WriteConfigurationAsync())
             {
                 Log.Information("Configuration file creation complete");
             }
@@ -51,13 +51,11 @@ namespace BulkDataLoader.Tasks
                 "WHERE TABLE_SCHEMA = @schema " +
                 "AND TABLE_NAME = @table;";
 
-            using (var connection = Configuration.GetConnection("CallCentreDb"))
-            {
-                return await connection.QueryAsync<SchemaColumn>(sql, new {schema, table});
-            }
+            using var connection = Configuration.GetConnection("DatabaseConnectionString");
+            return await connection.QueryAsync<SchemaColumn>(sql, new { schema, table });
         }
 
-        private async Task<bool> WriteConfiguration()
+        private async Task<bool> WriteConfigurationAsync()
         {
             var json = JsonConvert.SerializeObject(Configuration, new JsonSerializerSettings
             {

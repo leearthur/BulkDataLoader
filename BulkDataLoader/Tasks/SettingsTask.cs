@@ -15,7 +15,7 @@ namespace BulkDataLoader.Tasks
 
         public override async Task ExecuteAsync()
         {
-            var secureLocation = await Configuration.GetSecureLocation();
+            var secureLocation = await Configuration.GetSecureLocationAsync();
             Log.Information($"MySQL Secure Location: {secureLocation}");
             Log.Information($"Output Location: { Configuration.GetApplicationSetting("OutputFileLocation")}");
         }

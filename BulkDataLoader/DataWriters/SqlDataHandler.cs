@@ -49,10 +49,10 @@ namespace BulkDataLoader.DataWriters
 
         public override async Task LoadAsync()
         {
-            using var connection = Configuration.GetConnection("CallCentreDb");
+            using var connection = Configuration.GetConnection("DatabaseConnectionString");
             
             var file = GetFileInfo();
-            var sql = await File.ReadAllTextAsync(file.FullName);
+            var sql = await File.ReadAllTextAsync(file.FullName, Encoding.UTF8);
 
             Log.Information($"[ ] Loading data from SQL file {file.FullName}");
 

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using BulkDataLoader.DataWriters;
+using BulkDataLoader.Lists;
 using Serilog;
 
 namespace BulkDataLoader.Tasks
@@ -13,7 +14,7 @@ namespace BulkDataLoader.Tasks
         private readonly FileMode _fileMode;
         private readonly OutputType _outputType;
 
-        public GenerateDataTask(Configuration configuration, IEnumerable<string> settings)
+        public GenerateDataTask(Configuration configuration, IEnumerable<string> settings, IListCollection listCollection)
             : base(configuration, settings)
         {
             _count = int.Parse(Settings[0]);
@@ -26,7 +27,7 @@ namespace BulkDataLoader.Tasks
                 ? OutputType.Sql
                 : OutputType.Csv;
 
-            _dataGenerator = new DataGenerator(configuration, _outputType);
+            _dataGenerator = new DataGenerator(configuration, listCollection, _outputType);
         }
 
         public override async Task ExecuteAsync()

@@ -20,16 +20,11 @@ namespace BulkDataLoader
         public string TableName { get; set; }
         public IEnumerable<Column> Columns { get; set; }
         [JsonIgnore]
-        public DirectoryInfo Location { get; } = GetLocation();
-
-        private static DirectoryInfo GetLocation()
-        {
-            return new FileInfo(Assembly.GetExecutingAssembly().Location).Directory;
-        }
+        public static DirectoryInfo Location { get; } = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory;
 
         public static async Task<Configuration> Load(string name)
         {
-            var configFile = new FileInfo($@"{GetLocation()}\Configurations\{name}.json");
+            var configFile = new FileInfo($@"{Location}\Configurations\{name}.json");
 
             if (!configFile.Exists)
             {

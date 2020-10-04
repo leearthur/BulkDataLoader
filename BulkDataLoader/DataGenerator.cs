@@ -10,24 +10,31 @@ namespace BulkDataLoader
 {
     public class DataGenerator
     {
+        public const string DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+
         private readonly Configuration _configuration;
+        private readonly IListCollection _listCollection;
         private readonly OutputType _outputType;
         private readonly Regex _randomRegex;
         private readonly Random _random;
-        private readonly ListCollection _listCollection;
-
-        public DataGenerator(Configuration configuration, OutputType outputType)
-        {
+        
+        public DataGenerator(Configuration configuration, IListCollection listCollection, OutputType outputType)
+        {           
             _configuration = configuration;
             _outputType = outputType;
             _randomRegex = new Regex(@"##RANDOM\((\d+),\s*(\d+)\)##");
             _random = new Random();
-            _listCollection = new ListCollection();
+            _listCollection = listCollection;
         }
 
         public async Task<IEnumerable<DataRow>> GenerateRowsAsync(int count, char quote)
         {
             Log.Information($"[ ] Generating {count} records for {_configuration.Name}");
+
+            if (count == 0)
+            {
+                return new DataRow[0];
+            }
 
             await _listCollection.LoadAsync(_configuration);
 
@@ -45,23 +52,21 @@ namespace BulkDataLoader
         {
             return column.Type switch
             {
-                "string" => $"{quote}{GetStringValue(column, lineIndex)}{quote}",
+                "string" => $"{quote}{Parse(GetFixedValue(column, lineIndex))}{quote}",
                 "date" => $"{quote}{GetDateTime(column)}{quote}",
                 "guid" => $"{quote}{GenerateGuid(column, lineIndex)}{quote}",
                 "numeric" => GetNumericValue(column, lineIndex),
-                "list" => $"{quote}{GetListValue(column, lineIndex)}{quote}",
+                "list" => $"{quote}{Parse(GetListValue(column, lineIndex))}{quote}",
                 _ => throw new ArgumentException($"Unkown parameter type '{column.Type}' for column '{column.Name}' in configuration '{_configuration.Name}'."),
             };
         }
 
         private static string GetDateTime(Column column)
         {
-            const string dateFormat = "yyyy-MM-dd HH:mm:ss";
-
             return (column.Value.ToString().ToUpper()) switch
             {
-                "NOW" => DateTime.Now.ToString(dateFormat),
-                _ => DateTime.Parse(column.Value.ToString()).ToString(dateFormat),
+                "NOW" => DateTime.Now.ToString(DateTimeFormat),
+                _ => DateTime.Parse(column.Value.ToString()).ToString(DateTimeFormat),
             };
         }
 
@@ -88,14 +93,6 @@ namespace BulkDataLoader
             return _random.Next(minValue, maxValue).ToString();
         }
 
-        private string GetStringValue(Column column, int index)
-        {
-            var value = GetFixedValue(column, index);
-            return _outputType == OutputType.Sql
-                ? SqlParse(value)
-                : value;
-        }
-
         private string GetFixedValue(Column column, int index)
         {
             var value = column.Value
@@ -115,16 +112,14 @@ namespace BulkDataLoader
         private string GetListValue(Column column, int index)
         {
             var value = column.Value.ToString();
-            var items = _listCollection.ExtractListNames(value);
+            var items = ListCollection.ExtractListNames(value);
 
             foreach (var listName in items)
             {
                 value = value.Replace(listName, _listCollection.Get(listName[1..^1]));
             }
 
-            return _outputType == OutputType.Sql
-                ? SqlParse(value)
-                : value;
+            return value;
         }
 
         private string GetIndexValue(Column column, int index)
@@ -136,9 +131,11 @@ namespace BulkDataLoader
             return result.ToString();
         }
 
-        private string SqlParse(string value)
+        private string Parse(string value)
         {
-            return value.Replace("'", "''");
-        }
+            return _outputType == OutputType.Sql
+                ? value.Replace("'", "''")
+                : value;
+        }        
     }
 }

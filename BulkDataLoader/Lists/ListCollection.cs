@@ -10,7 +10,13 @@ using System.Threading.Tasks;
 
 namespace BulkDataLoader.Lists
 {
-    public class ListCollection
+    public interface IListCollection
+    {
+        Task LoadAsync(Configuration configuration);
+        string Get(string listName);
+    }
+
+    public class ListCollection : IListCollection
     {
         public Dictionary<string, IEnumerable<string>> Lists { get; } = new Dictionary<string, IEnumerable<string>>();
         private Random _random = new Random();
@@ -24,11 +30,29 @@ namespace BulkDataLoader.Lists
 
             foreach (var list in lists)
             {
-                await LoadAsync(list[1..^1]);
+                await LoadListAsync(list[1..^1]);
             }
         }
 
-        public async Task LoadAsync(string name)
+        public string Get(string listName)
+        {
+            if (!Lists.ContainsKey(listName))
+            {
+                throw new ArgumentException($"Invalid list '{listName}' specified");
+            }
+
+            var list = Lists[listName];
+            var index = _random.Next(0, list.Count() - 1);
+            return list.Skip(index).First();
+        }
+
+        public static IEnumerable<string> ExtractListNames(string value)
+        {
+            var pattern = @"(?<!{){[^{}]+}(?!})";
+            return Regex.Matches(value, pattern).Select(m => m.ToString());
+    }
+
+        private async Task LoadListAsync(string name)
         {
             var configFile = new FileInfo($@"{GetLocation()}\Lists\{name}.json");
 
@@ -49,24 +73,6 @@ namespace BulkDataLoader.Lists
 
             Lists.Add(name, list);
         }
-
-        public string Get(string listName)
-        {
-            if (!Lists.ContainsKey(listName))
-            {
-                throw new ArgumentException($"Invalid list '{listName}' specified");
-            }
-
-            var list = Lists[listName];
-            var index = _random.Next(0, list.Count() - 1);
-            return list.Skip(index).First();
-        }
-
-        public IEnumerable<string> ExtractListNames(string value)
-        {
-            var pattern = @"(?<!{){[^{}]+}(?!})";
-            return Regex.Matches(value, pattern).Select(m => m.ToString());
-    }
 
         private static DirectoryInfo GetLocation()
         {

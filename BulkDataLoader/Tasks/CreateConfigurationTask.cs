@@ -13,13 +13,13 @@ namespace BulkDataLoader.Tasks
     {
         public bool Overwrite { get; }
 
-        private const int SchemaPos = 0;
-        private const int TablePos = 1;
+        private readonly TableInformation _tableInformation;
 
-        public CreateConfigurationTask(Configuration configuration, IEnumerable<string> settings) 
+        public CreateConfigurationTask(Configuration configuration, IEnumerable<string> settings)
             : base(configuration, settings)
         {
             Overwrite = SettingExists("Overwrite");
+            _tableInformation = new TableInformation(Configuration.TableName);
         }
 
         public override async Task ExecuteAsync()
@@ -27,14 +27,15 @@ namespace BulkDataLoader.Tasks
             Log.Information("Starting configuration creation...");
 
             var nameParts = Configuration.TableName.Split('.').ToArray();
-            var columns = (await GetColumnData(nameParts[SchemaPos], nameParts[TablePos])).ToArray();
+            var columns = (await GetColumnData()).ToArray();
             Log.Information($"[ ] {columns.Length} column details loaded");
 
-            Configuration.Name = nameParts[TablePos];
+            Configuration.Name = _tableInformation.TableName;
             Configuration.Columns = columns.Select(col => new Column
             {
                 Name = col.ColumnName,
-                Type = MapDataType(col.DataType)
+                Type = MapDataType(col),
+                Properties = MapDefaultProperties(col)
             });
 
             if (await WriteConfigurationAsync())
@@ -43,16 +44,24 @@ namespace BulkDataLoader.Tasks
             }
         }
 
-        private async Task<IEnumerable<SchemaColumn>> GetColumnData(string schema, string table)
+        private async Task<IEnumerable<SchemaColumn>> GetColumnData()
         {
-            const string sql =
+            var sql =
                 "SELECT COLUMN_NAME ColumnName, DATA_TYPE DataType " +
                 "FROM information_schema.COLUMNS " +
-                "WHERE TABLE_SCHEMA = @schema " +
-                "AND TABLE_NAME = @table;";
+                "WHERE EXTRA != 'auto_increment' " +
+                "AND TABLE_NAME = @TableName ";
+
+            if (_tableInformation.HasSchemaName)
+            {
+                sql += "AND TABLE_SCHEMA = @SchemaName ";
+            }
 
             using var connection = Configuration.GetConnection("DatabaseConnectionString");
-            return await connection.QueryAsync<SchemaColumn>(sql, new { schema, table });
+            return await connection.QueryAsync<SchemaColumn>($"{sql};", new {
+                _tableInformation.TableName,
+                _tableInformation.SchemaName
+            }) ;
         }
 
         private async Task<bool> WriteConfigurationAsync()
@@ -81,20 +90,69 @@ namespace BulkDataLoader.Tasks
             return true;
         }
 
-        private static string MapDataType(string dataType)
+        private static string MapDataType(SchemaColumn column)
         {
-            switch (dataType)
+            switch (column.DataType)
             {
                 case "text" : 
                 case "varchar" : 
                     return "string";
-                
+
+                case "date":
                 case "datetime" :
                 case "timestamp" : 
                     return "date";
 
-                default: return "value";
+                case "bit":
+                case "tinyint":
+                case "smallint":
+                case "mediumint":
+                case "int":
+                case "bigint":
+                case "decimal":
+                    return "numeric";
+
+                default: return "unknown";
             }
+        }
+
+        private static Dictionary<string, object> MapDefaultProperties(SchemaColumn column)
+        {
+            var properties = new Dictionary<string, object>();
+            switch (column.DataType)
+            {
+                case "bit":
+                    AddMinMaxValueProperties(properties, 0, 1);
+                    break;
+
+                case "tinyint":
+                    AddMinMaxValueProperties(properties, -128, 127);
+                    break;
+
+                case "smallint":
+                    AddMinMaxValueProperties(properties, short.MinValue, short.MaxValue);
+                    break;
+
+                case "mediumint":
+                    AddMinMaxValueProperties(properties, -8388608, 8388607);
+                    break;
+
+                case "int":
+                    AddMinMaxValueProperties(properties, int.MinValue, int.MaxValue);
+                    break;
+
+                case "bigint":
+                    AddMinMaxValueProperties(properties, long.MinValue, long.MaxValue);
+                    break;
+            }
+
+            return properties.Count > 0 ? properties : null;
+        }
+
+        private static void AddMinMaxValueProperties(Dictionary<string, object> properties, long minValue, long maxValue)
+        {
+            properties.Add("minValue", minValue);
+            properties.Add("maxValue", maxValue);
         }
     }
 

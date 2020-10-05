@@ -18,24 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Configurations\Archive\ActiveCalls.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Configurations\Archive\Agents.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Configurations\Archive\CallRecordingComment.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Configurations\Archive\Encoding.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Configurations\Archive\Employees.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Configurations\Archive\RecentCallInformation.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Configurations\employees.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

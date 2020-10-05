@@ -8,7 +8,7 @@ Tool to create and load test data in bulk into a MySQL database.
 ```
 Generates CSV data (unless specified otherwise) based on the specified configuration file.
 
-| | |
+|Flag|Description|
 |-|-|
 |-Sql|Creates a SQL file intead of CSV data.|
 |-Apend|If the output file already exists, the data is appended to the end of the file.|
@@ -19,7 +19,7 @@ Generates CSV data (unless specified otherwise) based on the specified configura
 ```
 Bulk loads the CSV data (unless specified otherwise) into MySQL.
 
-| | |
+|Flag|Description|
 |-|-|
 |-Sql|Executes SQL script. This is significantly slower than loading CSV data.|
 
@@ -27,9 +27,9 @@ Bulk loads the CSV data (unless specified otherwise) into MySQL.
 ```
 -Create {table-name} [-Overwrite]
 ```
-Create a basic configuration file based on the table structure.
+Create a basic configuration file based on the table structure. Auto_Increment columns will not be included.
 
-| | |
+|Flag|Description|
 |-|-|
 |-Overwrite|Overwrite existing file.|
 

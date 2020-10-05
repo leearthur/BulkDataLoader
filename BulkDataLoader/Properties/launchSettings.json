@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "BulkDataLoader": {
-      "commandName": "Project",
-      "commandLineArgs": "-Load shippers 64"
-    }
-  }
-}

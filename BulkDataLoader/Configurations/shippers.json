@@ -1,0 +1,29 @@
+{
+  "name": "shippers",
+  "tableName": "northwind.shippers",
+  "columns": [
+    {
+      "name": "ShipperId",
+      "type": "numeric",
+      "value": "##INDEX##",
+      "properties": {
+        "indexStartValue": 100
+      }
+    },
+    {
+      "name": "GlobalId",
+      "type": "guid",
+      "value": "INDEXED"
+    },
+    {
+      "name": "CompanyName",
+      "type": "list",
+      "value": "{company-name} Shipping"
+    },
+    {
+      "name": "InternalId",
+      "type": "string",
+      "value": "SHP_##INDEX##_##RANDOM(10, 99)##"
+    }
+  ]
+}

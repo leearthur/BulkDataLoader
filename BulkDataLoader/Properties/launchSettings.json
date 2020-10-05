@@ -2,7 +2,7 @@
   "profiles": {
     "BulkDataLoader": {
       "commandName": "Project",
-      "commandLineArgs": "-Load Employees -sql"
+      "commandLineArgs": "-Load shippers 64"
     }
   }
 }

@@ -18,22 +18,37 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Configurations\ActiveCalls.json">
+    <None Update="Configurations\Archive\ActiveCalls.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Configurations\Agents.json">
+    <None Update="Configurations\Archive\Agents.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Configurations\CallRecordingComment.json">
+    <None Update="Configurations\Archive\CallRecordingComment.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Configurations\Encoding.json">
+    <None Update="Configurations\Archive\Encoding.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Configurations\Employees.json">
+    <None Update="Configurations\Archive\Employees.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Configurations\RecentCallInformation.json">
+    <None Update="Configurations\Archive\RecentCallInformation.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Configurations\employees.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Configurations\shippers.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Configurations\suppliers.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Lists\city.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Lists\company-name.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Lists\first-name.json">

@@ -1,0 +1,35 @@
+{
+  "name": "suppliers",
+  "tableName": "northwind.suppliers",
+  "columns": [
+    {
+      "name": "SupplierId",
+      "type": "numeric",
+      "value": "##INDEX##"
+    },
+    {
+      "name": "GlobalId",
+      "type": "guid"
+    },
+    {
+      "name": "CompanyName",
+      "type": "list",
+      "value": "{company-name}"
+    },
+    {
+      "name": "ContactName",
+      "type": "list",
+      "value": "{first-name} {last-name}"
+    },
+    {
+      "name": "City",
+      "type": "list",
+      "value": "{city}"
+    },
+    {
+      "name": "Country",
+      "type": "string",
+      "value": "United Kingdom"
+    }
+  ]
+}

@@ -1,24 +1,57 @@
-﻿{
+{
   "name": "employees",
-  "tableName": "company.employee",
+  "tableName": "northwind.employees",
   "columns": [
     {
       "name": "EmployeeId",
       "type": "numeric",
-      "value": "##INDEX##"
-    },
-    {
-      "name": "EmployeeNumber",
-      "type": "numeric",
+      "value": "##INDEX##",
       "properties": {
-        "minValue": 10000000,
-        "maxValue": 99999999
+        "indexStartValue": 1000
       }
     },
     {
-      "name": "Name",
+      "name": "LastName",
       "type": "list",
-      "value": "{first-name} {last-name}"
+      "value": "{last-name}"
+    },
+    {
+      "name": "FirstName",
+      "type": "list",
+      "value": "{first-name}"
+    },
+    {
+      "name": "HireDate",
+      "type": "date",
+      "value": "NOW"
+    },
+    {
+      "name": "City",
+      "type": "list",
+      "value": "{city}"
+    },
+    {
+      "name": "Country",
+      "type": "string",
+      "value": "United Kingdom"
+    },
+    {
+      "name": "Extention",
+      "type": "numeric",
+      "properties": {
+        "minValue": 1000,
+        "maxValue": 5000
+      }
+    },
+    {
+      "name": "ReportsTo",
+      "type": "numeric",
+      "value": 1000
+    },
+    {
+      "name": "PhotoPath",
+      "type": "string",
+      "value": "../CorporateImages/Employees/##INDEX##/Photos/"
     }
   ]
 }

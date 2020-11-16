@@ -1,11 +1,11 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using Serilog;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MySql.Data.MySqlClient;
-using Serilog;
 
 namespace BulkDataLoader.DataWriters
 {
@@ -20,7 +20,7 @@ namespace BulkDataLoader.DataWriters
             Log.Information($"[ ] Writing CSV file {outputFile.FullName}");
 
             using var stream = outputFile.Open(fileMode, FileAccess.Write);
-            
+
             var encoder = new UTF8Encoding(true);
             var csvData = data.Select(row => row.ToCsvRow());
             var dataString = string.Join(Environment.NewLine, csvData) + Environment.NewLine;
@@ -32,7 +32,7 @@ namespace BulkDataLoader.DataWriters
         public override async Task LoadAsync()
         {
             using var connection = Configuration.GetConnection("DatabaseConnectionString");
-            
+
             var loader = new MySqlBulkLoader(connection)
             {
                 FileName = $@"{GetFileInfo().FullName}",

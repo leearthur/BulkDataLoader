@@ -1,8 +1,8 @@
-﻿using System;
+﻿using BulkDataLoader.Tasks;
+using Serilog;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using BulkDataLoader.Tasks;
-using Serilog;
 
 namespace BulkDataLoader
 {
@@ -25,7 +25,7 @@ namespace BulkDataLoader
 
                 if (task.DisplayExecutionTime)
                 {
-                    var executionTime = Math.Round((decimal) timer.ElapsedMilliseconds / 1000, 4);
+                    var executionTime = Math.Round((decimal)timer.ElapsedMilliseconds / 1000, 4);
                     Log.Information($"Execution Time: {executionTime} seconds");
                 }
             }

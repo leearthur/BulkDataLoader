@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Dapper;
+using Serilog;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Dapper;
-using Serilog;
 
 namespace BulkDataLoader.DataWriters
 {
@@ -20,7 +20,7 @@ namespace BulkDataLoader.DataWriters
             Log.Information($"[ ] Writing CSV file {outputFile.FullName}");
 
             using var stream = outputFile.Open(fileMode, FileAccess.Write);
-            
+
             var rows = data.ToArray();
             if (!rows.Any())
             {
@@ -50,7 +50,7 @@ namespace BulkDataLoader.DataWriters
         public override async Task LoadAsync()
         {
             using var connection = Configuration.GetConnection("DatabaseConnectionString");
-            
+
             var file = GetFileInfo();
             var sql = await File.ReadAllTextAsync(file.FullName, Encoding.UTF8);
 

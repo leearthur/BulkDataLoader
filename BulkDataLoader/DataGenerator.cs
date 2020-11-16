@@ -1,10 +1,10 @@
-﻿using System;
+﻿using BulkDataLoader.Lists;
+using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using BulkDataLoader.Lists;
-using Serilog;
 
 namespace BulkDataLoader
 {
@@ -17,9 +17,9 @@ namespace BulkDataLoader
         private readonly OutputType _outputType;
         private readonly Regex _randomRegex;
         private readonly Random _random;
-        
+
         public DataGenerator(Configuration configuration, IListCollection listCollection, OutputType outputType)
-        {           
+        {
             _configuration = configuration;
             _outputType = outputType;
             _randomRegex = new Regex(@"##RANDOM\((\d+),\s*(\d+)\)##");
@@ -102,7 +102,7 @@ namespace BulkDataLoader
             var randomResult = _randomRegex.Match(value);
             if (randomResult.Success)
             {
-                value = value.Replace(randomResult.Value, 
+                value = value.Replace(randomResult.Value,
                     _random.Next(int.Parse(randomResult.Groups[1].Value), int.Parse(randomResult.Groups[2].Value)).ToString());
             }
 
@@ -136,6 +136,6 @@ namespace BulkDataLoader
             return _outputType == OutputType.Sql
                 ? value.Replace("'", "''")
                 : value;
-        }        
+        }
     }
 }

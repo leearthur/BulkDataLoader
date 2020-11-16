@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Dapper;
+﻿using Dapper;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Serilog;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BulkDataLoader.Tasks
 {
@@ -58,10 +58,11 @@ namespace BulkDataLoader.Tasks
             }
 
             using var connection = Configuration.GetConnection("DatabaseConnectionString");
-            return await connection.QueryAsync<SchemaColumn>($"{sql};", new {
+            return await connection.QueryAsync<SchemaColumn>($"{sql};", new
+            {
                 _tableInformation.TableName,
                 _tableInformation.SchemaName
-            }) ;
+            });
         }
 
         private async Task<bool> WriteConfigurationAsync()
@@ -94,13 +95,13 @@ namespace BulkDataLoader.Tasks
         {
             switch (column.DataType)
             {
-                case "text" : 
-                case "varchar" : 
+                case "text":
+                case "varchar":
                     return "string";
 
                 case "date":
-                case "datetime" :
-                case "timestamp" : 
+                case "datetime":
+                case "timestamp":
                     return "date";
 
                 case "bit":

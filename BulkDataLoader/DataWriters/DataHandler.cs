@@ -11,7 +11,7 @@ namespace BulkDataLoader.DataWriters
         public abstract char QuoteCharacter { get; }
 
         public Configuration Configuration { get; private set; }
-        public DirectoryInfo OutputDirectory { get; private set;  }
+        public DirectoryInfo OutputDirectory { get; private set; }
 
         public abstract Task WriteAsync(IEnumerable<DataRow> data, FileMode fileMode);
         public abstract Task LoadAsync();

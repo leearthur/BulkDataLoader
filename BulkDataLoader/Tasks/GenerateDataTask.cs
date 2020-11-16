@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using BulkDataLoader.DataWriters;
+﻿using BulkDataLoader.DataWriters;
 using BulkDataLoader.Lists;
 using Serilog;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace BulkDataLoader.Tasks
 {

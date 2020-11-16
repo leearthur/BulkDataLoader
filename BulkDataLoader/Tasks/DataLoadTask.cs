@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using BulkDataLoader.DataWriters;
+﻿using BulkDataLoader.DataWriters;
 using Serilog;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BulkDataLoader.Tasks
 {
@@ -31,7 +31,7 @@ namespace BulkDataLoader.Tasks
             var outputDirectory = _outputType == OutputType.Sql
                 ? Configuration.GetApplicationSetting("OutputFileLocation")
                 : await Configuration.GetSecureLocationAsync();
-                
+
             var handler = DataHandler.GetInstance(Configuration, _outputType, outputDirectory);
 
             await handler.LoadAsync();

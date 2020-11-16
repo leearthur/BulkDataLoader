@@ -29,9 +29,9 @@ namespace BulkDataLoader.Tasks
                 "-generate" => new GenerateDataTask(await Configuration.Load(args[1]), args.Skip(2), listCollection),
                 "-load" => new DataLoadTask(await Configuration.Load(args[1]), args.Skip(2)),
                 "-create" => new CreateConfigurationTask(new Configuration
-                    {
-                        TableName = args[1]
-                    }, args.Skip(2)),
+                {
+                    TableName = args[1]
+                }, args.Skip(2)),
                 "-settings" => new SettingsTask(await Configuration.Load(args[1]), args.Skip(1)),
                 _ => new HelpTask(),
             };

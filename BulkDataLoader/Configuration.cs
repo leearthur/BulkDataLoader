@@ -1,15 +1,15 @@
-﻿using System;
+﻿using BulkDataLoader.Tasks;
+using Dapper;
+using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using BulkDataLoader.Tasks;
-using Dapper;
-using MySql.Data.MySqlClient;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace BulkDataLoader
 {
@@ -28,11 +28,11 @@ namespace BulkDataLoader
 
             if (!configFile.Exists)
             {
-                throw  new ArgumentException($"Specified configuration '{name}' does not exist.");
+                throw new ArgumentException($"Specified configuration '{name}' does not exist.");
             }
 
             using var stream = configFile.OpenText();
-            
+
             var configJson = await stream.ReadToEndAsync();
             var config = JsonConvert.DeserializeObject<Configuration>(configJson, new JsonSerializerSettings
             {
@@ -55,7 +55,7 @@ namespace BulkDataLoader
         public async Task<string> GetSecureLocationAsync()
         {
             using var connection = GetConnection("DatabaseConnectionString");
-            
+
             const string sql = "SHOW VARIABLES LIKE 'secure_file_priv'";
             var result = (await connection.QueryAsync<MySqlVariable>(sql)).FirstOrDefault();
 

@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Serilog;
+﻿using Serilog;
+using System.Threading.Tasks;
 
 namespace BulkDataLoader.Tasks
 {

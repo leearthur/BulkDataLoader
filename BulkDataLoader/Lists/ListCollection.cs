@@ -50,7 +50,7 @@ namespace BulkDataLoader.Lists
         {
             var pattern = @"(?<!{){[^{}]+}(?!})";
             return Regex.Matches(value, pattern).Select(m => m.ToString());
-    }
+        }
 
         private async Task LoadListAsync(string name)
         {

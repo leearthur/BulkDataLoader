@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Serilog;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Serilog;
 
 namespace BulkDataLoader.Tasks
 {

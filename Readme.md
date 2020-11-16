@@ -4,7 +4,7 @@ Tool to create and load test data in bulk into a MySQL database.
 ## Operations
 ### Generate
 ```
--Generate {configureation-name} {record-count} [-Append] [-Sql]
+-generate {configureation-name} {record-count} [-Append] [-Sql]
 ```
 Generates CSV data (unless specified otherwise) based on the specified configuration file.
 
@@ -15,7 +15,7 @@ Generates CSV data (unless specified otherwise) based on the specified configura
 
 ### Load
 ```
--Load {configuration-name} [-Sql]
+-load {configuration-name} [-Sql]
 ```
 Bulk loads the CSV data (unless specified otherwise) into MySQL.
 
@@ -25,19 +25,13 @@ Bulk loads the CSV data (unless specified otherwise) into MySQL.
 
 ### Create
 ```
--Create {table-name} [-Overwrite]
+-create {table-name} [-Overwrite]
 ```
 Create a basic configuration file based on the table structure. Auto_Increment columns will not be included.
 
 |Flag|Description|
 |-|-|
 |-Overwrite|Overwrite existing file.|
-
-### Settings
-```
--Settings
-```
-List application settings as definded in the app.config file.
 
 ### MySQL 
 To bulk load data into MySQL, the output file needs to be in a folder which the MySQL process has access to. 
@@ -50,3 +44,10 @@ The location of the folder can be found by running the following query:
 ```
 SHOW VARIABLES LIKE 'secure_file_priv'
 ```
+
+### Local Configuration
+There are two local application settings. Both can either be set in the appsettings.json file, or as an environment variable.
+|Name|Description|
+|-|-|
+|DefaultConnection|Default database connection string. Required for -load action.|
+|OutputFileLocation|Location where the output file will be generated. Required for -generate and -load actions.|

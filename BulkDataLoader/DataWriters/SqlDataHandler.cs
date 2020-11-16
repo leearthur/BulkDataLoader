@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using MySql.Data.MySqlClient;
 using Serilog;
 using System.Collections.Generic;
 using System.IO;
@@ -20,7 +21,6 @@ namespace BulkDataLoader.DataWriters
             Log.Information($"[ ] Writing CSV file {outputFile.FullName}");
 
             using var stream = outputFile.Open(fileMode, FileAccess.Write);
-
             var rows = data.ToArray();
             if (!rows.Any())
             {
@@ -49,7 +49,7 @@ namespace BulkDataLoader.DataWriters
 
         public override async Task LoadAsync()
         {
-            using var connection = Configuration.GetConnection("DatabaseConnectionString");
+            using var connection = new MySqlConnection(Configuration.DefaultConnectionString);
 
             var file = GetFileInfo();
             var sql = await File.ReadAllTextAsync(file.FullName, Encoding.UTF8);

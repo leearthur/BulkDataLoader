@@ -31,7 +31,7 @@ namespace BulkDataLoader.DataWriters
 
         public override async Task LoadAsync()
         {
-            using var connection = Configuration.GetConnection("DatabaseConnectionString");
+            using var connection = new MySqlConnection(Configuration.DefaultConnectionString);
 
             var loader = new MySqlBulkLoader(connection)
             {

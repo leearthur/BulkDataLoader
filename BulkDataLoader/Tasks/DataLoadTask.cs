@@ -28,11 +28,7 @@ namespace BulkDataLoader.Tasks
 
         private async Task LoadDataAsync()
         {
-            var outputDirectory = _outputType == OutputType.Sql
-                ? Configuration.GetApplicationSetting("OutputFileLocation")
-                : await Configuration.GetSecureLocationAsync();
-
-            var handler = DataHandler.GetInstance(Configuration, _outputType, outputDirectory);
+            var handler = DataHandler.GetInstance(Configuration, _outputType);
 
             await handler.LoadAsync();
         }

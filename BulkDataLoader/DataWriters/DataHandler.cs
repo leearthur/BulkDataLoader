@@ -16,16 +16,16 @@ namespace BulkDataLoader.DataWriters
         public abstract Task WriteAsync(IEnumerable<DataRow> data, FileMode fileMode);
         public abstract Task LoadAsync();
 
-        protected void Init(Configuration configuration, string outputDirectory)
+        protected void Init(Configuration configuration)
         {
             Configuration = configuration;
-            OutputDirectory = new DirectoryInfo(outputDirectory);
+            OutputDirectory = new DirectoryInfo(configuration.OutputFileLocation);
         }
 
-        public static DataHandler GetInstance(Configuration configuration, OutputType outputType, string outputDirectory)
+        public static DataHandler GetInstance(Configuration configuration, OutputType outputType)
         {
             var instance = GetTypeIstance(outputType);
-            instance.Init(configuration, outputDirectory);
+            instance.Init(configuration);
 
             return instance;
         }

@@ -17,10 +17,9 @@ namespace BulkDataLoader.Tasks
             const string helpText = "\n" +
                 "Usage dotnet BulkDataLoader.dll [-{task-name}]\n" +
                 "Tasks:\n" +
-                "  -Generate {configureation-name} {record-count} [-Append] [-Sql]\n" +
-                "  -Load {configuration-name} [-Sql]\n" +
-                "  -Create {table-name} [-Overwrite]\n" +
-                "  -Settings\n";
+                "  -generate {configureation-name} {record-count} [-Append] [-Sql]\n" +
+                "  -load {configuration-name} [-Sql]\n" +
+                "  -create {table-name} [-Overwrite]";
 
             Log.Information(helpText);
 

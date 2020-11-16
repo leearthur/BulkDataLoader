@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Serilog;
@@ -57,7 +58,7 @@ namespace BulkDataLoader.Tasks
                 sql += "AND TABLE_SCHEMA = @SchemaName ";
             }
 
-            using var connection = Configuration.GetConnection("DatabaseConnectionString");
+            using var connection = new MySqlConnection(Configuration.DefaultConnectionString);
             return await connection.QueryAsync<SchemaColumn>($"{sql};", new
             {
                 _tableInformation.TableName,

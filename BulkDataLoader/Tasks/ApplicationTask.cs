@@ -1,4 +1,5 @@
 ﻿using BulkDataLoader.Lists;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace BulkDataLoader.Tasks
         public Configuration Configuration { get; }
         public string[] Settings { get; }
         public virtual bool DisplayExecutionTime { get; } = true;
+        public IConfigurationRoot ConfigurationRoot { get; private set; }
 
         protected ApplicationTask(Configuration configuration, IEnumerable<string> settings)
         {
@@ -32,7 +34,6 @@ namespace BulkDataLoader.Tasks
                 {
                     TableName = args[1]
                 }, args.Skip(2)),
-                "-settings" => new SettingsTask(await Configuration.Load(args[1]), args.Skip(1)),
                 _ => new HelpTask(),
             };
         }

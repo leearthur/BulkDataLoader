@@ -28,6 +28,7 @@ namespace BulkDataLoader.Tasks
             var listCollection = new ListCollection();
             return taskName switch
             {
+                "--version" => new VersionTask(),
                 "-generate" => new GenerateDataTask(await Configuration.Load(args[1]), args.Skip(2), listCollection),
                 "-load" => new DataLoadTask(await Configuration.Load(args[1]), args.Skip(2)),
                 "-create" => new CreateConfigurationTask(new Configuration

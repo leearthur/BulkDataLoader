@@ -1,4 +1,5 @@
 ﻿using Serilog;
+using System;
 using System.Threading.Tasks;
 
 namespace BulkDataLoader.Tasks
@@ -14,15 +15,14 @@ namespace BulkDataLoader.Tasks
 
         public override Task ExecuteAsync()
         {
-            const string helpText = "\n" +
-                "Usage dotnet BulkDataLoader.dll [-{task-name}]\n" +
+            const string helpText = 
+                "Usage: BulkDataLoader.exe [-{task-name}]\n" +
                 "Tasks:\n" +
                 "  -generate {configureation-name} {record-count} [-Append] [-Sql]\n" +
                 "  -load {configuration-name} [-Sql]\n" +
-                "  -create {table-name} [-Overwrite]";
+                "  -create {table-name} [-Overwrite]\n";
 
-            Log.Information(helpText);
-
+            Console.WriteLine(helpText);
             return Task.CompletedTask;
         }
     }

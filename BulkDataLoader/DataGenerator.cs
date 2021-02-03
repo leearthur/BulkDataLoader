@@ -52,11 +52,12 @@ namespace BulkDataLoader
         {
             return column.Type switch
             {
-                "string" => $"{quote}{Parse(GetFixedValue(column, lineIndex))}{quote}",
-                "date" => $"{quote}{GetDateTime(column)}{quote}",
-                "guid" => $"{quote}{GenerateGuid(column, lineIndex)}{quote}",
+                "string" => SurroundWithQuotes(Parse(GetFixedValue(column, lineIndex)), quote),
+                "date" => SurroundWithQuotes(GetDateTime(column), quote),
+                "guid" => SurroundWithQuotes(GenerateGuid(column, lineIndex), quote),
                 "numeric" => GetNumericValue(column, lineIndex),
-                "list" => $"{quote}{Parse(GetListValue(column, lineIndex))}{quote}",
+                "list" => SurroundWithQuotes(Parse(GetListValue(column, lineIndex)), quote),
+                "boolean" => GetBooleanValue(column),
                 _ => throw new ArgumentException($"Unkown parameter type '{column.Type}' for column '{column.Name}' in configuration '{_configuration.Name}'."),
             };
         }
@@ -95,12 +96,27 @@ namespace BulkDataLoader
             return _random.Next(minValue, maxValue + 1).ToString();
         }
 
+        private string GetBooleanValue(Column column)
+        {
+            if (column.Value == null)
+            {
+                return "0";
+            }
+            
+            return ((string)column.Value).ToLower()  == "true" || (string)column.Value == "1" ? "1" : "0";
+        }
+
         private string GetFixedValue(Column column, int index)
         {
+            if (column.Value == null)
+            {
+                return null;
+            }
+
             var value = column.Value
                 .ToString()
                 .Replace("##INDEX##", GetIndexValue(column, index));
-            
+
             foreach (Match match in _randomRegex.Matches(value))
             {
                 var newValue = _random.Next(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value)).ToString();
@@ -134,9 +150,21 @@ namespace BulkDataLoader
 
         private string Parse(string value)
         {
+            if (value == null)
+            {
+                return null;
+            }
+
             return _outputType == OutputType.Sql
                 ? value.Replace("'", "''")
                 : value;
+        }
+
+        private string SurroundWithQuotes(string value, char quote)
+        {
+            return value != null
+                ? $"{quote}{value}{quote}"
+                : "NULL";
         }
     }
 }

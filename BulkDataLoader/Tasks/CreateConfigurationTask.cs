@@ -106,6 +106,8 @@ namespace BulkDataLoader.Tasks
                     return "date";
 
                 case "bit":
+                    return "boolean";
+
                 case "tinyint":
                 case "smallint":
                 case "mediumint":

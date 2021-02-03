@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -20,8 +19,19 @@ namespace BulkDataLoader
         public string TableName { get; set; }
         public IEnumerable<Column> Columns { get; set; }
 
-        public string OutputFileLocation { get; set; }
-        public string DefaultConnectionString { get; set; }
+        public string OutputFileLocation { get; }
+        public string DefaultConnectionString { get; }
+
+        public Configuration()
+        {
+            var localConfig = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
+                .AddEnvironmentVariables()
+                .Build();
+
+            OutputFileLocation = localConfig.GetSection("OutputFileLocation").Value;
+            DefaultConnectionString = localConfig.GetSection("DefaultConnection").Value;
+        }
 
         [JsonIgnore]
         public static DirectoryInfo Location { get; } = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory;
@@ -43,19 +53,7 @@ namespace BulkDataLoader
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             });
 
-            EnrichLocalSetting(config);
             return config;
-        }
-
-        private static void EnrichLocalSetting(Configuration config)
-        {
-            var localConfig = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
-                .AddEnvironmentVariables()
-                .Build();
-
-            config.OutputFileLocation = localConfig.GetSection("OutputFileLocation").Value;
-            config.DefaultConnectionString = localConfig.GetSection("DefaultConnection").Value;
         }
 
         public async Task<string> GetSecureLocationAsync()

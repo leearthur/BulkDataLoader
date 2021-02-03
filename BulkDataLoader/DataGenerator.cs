@@ -88,9 +88,9 @@ namespace BulkDataLoader
             }
 
             var minValue = column.Properties.Get("minValue", int.MinValue);
-            var maxValue = column.Properties.Get("maxValue", int.MaxValue);
+            var maxValue = column.Properties.Get("maxValue", int.MaxValue - 1);
 
-            return _random.Next(minValue, maxValue).ToString();
+            return _random.Next(minValue, maxValue + 1).ToString();
         }
 
         private string GetFixedValue(Column column, int index)

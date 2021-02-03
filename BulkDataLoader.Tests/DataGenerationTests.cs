@@ -91,6 +91,26 @@ namespace BulkDataLoader.Tests
         }
 
         [Fact]
+        public async Task GenerateCsvRows_NumericRange_MaxValueValidation()
+        {
+            var config = new ConfigurationBuilder("Test")
+                .AddColumn("UserId", "numeric", null, new Dictionary<string, object>
+                {
+                    { "minValue", 0 },
+                    { "maxValue", 1 }
+                });
+
+            var target = new DataGenerator(config.Build(), _listCollectionMock.Object, OutputType.Csv);
+
+            var response = (await target.GenerateRowsAsync(100, '"')).ToArray();
+
+            var values = response.SelectMany(r => r.Columns.Select(c => c.Value)).GroupBy(v => v);
+            Assert.Equal(2, values.Count());
+            Assert.Contains(values, v => v.Key == "0");
+            Assert.Contains(values, v => v.Key == "1");
+        }
+
+        [Fact]
         public async Task GenerateCsvRows_NumericIndex_MultipleRows()
         {
             const int rowCount = 5;

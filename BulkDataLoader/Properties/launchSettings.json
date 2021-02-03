@@ -2,7 +2,7 @@
   "profiles": {
     "BulkDataLoader": {
       "commandName": "Project",
-      "commandLineArgs": "-load employees"
+      "commandLineArgs": "-Generate employees_v2 10"
     }
   }
 }

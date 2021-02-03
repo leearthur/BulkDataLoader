@@ -66,6 +66,8 @@ namespace BulkDataLoader
             return (column.Value.ToString().ToUpper()) switch
             {
                 "NOW" => DateTime.Now.ToString(DateTimeFormat),
+                "YESTERDAY" => DateTime.Now.AddDays(-1).ToString(DateTimeFormat),
+                "TOMORROW" => DateTime.Now.AddDays(1).ToString(DateTimeFormat),
                 _ => DateTime.Parse(column.Value.ToString()).ToString(DateTimeFormat),
             };
         }
@@ -98,12 +100,11 @@ namespace BulkDataLoader
             var value = column.Value
                 .ToString()
                 .Replace("##INDEX##", GetIndexValue(column, index));
-
-            var randomResult = _randomRegex.Match(value);
-            if (randomResult.Success)
+            
+            foreach (Match match in _randomRegex.Matches(value))
             {
-                value = value.Replace(randomResult.Value,
-                    _random.Next(int.Parse(randomResult.Groups[1].Value), int.Parse(randomResult.Groups[2].Value)).ToString());
+                var newValue = _random.Next(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value)).ToString();
+                value = value.ReplaceFirst(match.Value, newValue);
             }
 
             return value;

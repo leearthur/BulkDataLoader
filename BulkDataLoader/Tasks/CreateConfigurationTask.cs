@@ -36,6 +36,7 @@ namespace BulkDataLoader.Tasks
             {
                 Name = col.ColumnName,
                 Type = MapDataType(col),
+                Value = MapDefaultValue(col),
                 Properties = MapDefaultProperties(col)
             });
 
@@ -48,7 +49,7 @@ namespace BulkDataLoader.Tasks
         private async Task<IEnumerable<SchemaColumn>> GetColumnData()
         {
             var sql =
-                "SELECT COLUMN_NAME ColumnName, DATA_TYPE DataType " +
+                "SELECT COLUMN_NAME ColumnName, DATA_TYPE DataType, IS_NULLABLE = 'NO' NotNull  " +
                 "FROM information_schema.COLUMNS " +
                 "WHERE EXTRA != 'auto_increment' " +
                 "AND TABLE_NAME = @TableName ";
@@ -120,6 +121,23 @@ namespace BulkDataLoader.Tasks
             }
         }
 
+        private static string MapDefaultValue(SchemaColumn column)
+        {
+            switch (column.DataType)
+            {
+                case "text":
+                case "varchar":
+                    return column.NotNull ? string.Empty : null;
+
+                case "date":
+                case "datetime":
+                case "timestamp":
+                    return "NOW";
+            }
+
+            return null;
+        }
+
         private static Dictionary<string, object> MapDefaultProperties(SchemaColumn column)
         {
             var properties = new Dictionary<string, object>();
@@ -142,11 +160,8 @@ namespace BulkDataLoader.Tasks
                     break;
 
                 case "int":
-                    AddMinMaxValueProperties(properties, int.MinValue, int.MaxValue);
-                    break;
-
                 case "bigint":
-                    AddMinMaxValueProperties(properties, long.MinValue, long.MaxValue);
+                    AddMinMaxValueProperties(properties, int.MinValue, int.MaxValue);
                     break;
             }
 
@@ -164,5 +179,6 @@ namespace BulkDataLoader.Tasks
     {
         public string ColumnName { get; set; }
         public string DataType { get; set; }
+        public bool NotNull { get; set; }
     }
 }

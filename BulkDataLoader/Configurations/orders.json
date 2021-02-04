@@ -1,0 +1,87 @@
+{
+  "name": "orders",
+  "tableName": "northwind.orders",
+  "columns": [
+    {
+      "name": "OrderId",
+      "type": "numeric",
+      "properties": {
+        "minValue": -2147483648,
+        "maxValue": 2147483647
+      }
+    },
+    {
+      "name": "CustomerId",
+      "type": "string"
+    },
+    {
+      "name": "EmployeeId",
+      "type": "numeric",
+      "properties": {
+        "minValue": -2147483648,
+        "maxValue": 2147483647
+      }
+    },
+    {
+      "name": "OrderDate",
+      "type": "date",
+      "value": "NOW"
+    },
+    {
+      "name": "RequiredDate",
+      "type": "date",
+      "value": "NOW"
+    },
+    {
+      "name": "ShippedDate",
+      "type": "date",
+      "value": "NOW"
+    },
+    {
+      "name": "ShipVia",
+      "type": "numeric",
+      "properties": {
+        "minValue": -2147483648,
+        "maxValue": 2147483647
+      }
+    },
+    {
+      "name": "Freight",
+      "type": "numeric"
+    },
+    {
+      "name": "ShipName",
+      "type": "string"
+    },
+    {
+      "name": "ShipAddress",
+      "type": "string"
+    },
+    {
+      "name": "ShipCity",
+      "type": "string"
+    },
+    {
+      "name": "ShipRegion",
+      "type": "string"
+    },
+    {
+      "name": "ShipPostalCode",
+      "type": "string"
+    },
+    {
+      "name": "ShipCountry",
+      "type": "string"
+    },
+    {
+      "name": "ProcessDelay",
+      "type": "numeric",
+      "properties": {
+        "minValue": -32768,
+        "maxValue": 32767
+      }
+    }
+  ],
+  "outputFileLocation": "D:\\Development\\BulkDataLoader\\Output\\",
+  "defaultConnectionString": "Server=localhost;Port=3306;Uid=root;password=pebbles;"
+}

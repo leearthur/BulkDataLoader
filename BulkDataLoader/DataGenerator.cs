@@ -16,14 +16,13 @@ namespace BulkDataLoader
         private readonly IListCollection _listCollection;
         private readonly OutputType _outputType;
         private readonly Regex _randomRegex;
-        private readonly Random _random;
+        private static readonly Random _random = new Random();
 
         public DataGenerator(Configuration configuration, IListCollection listCollection, OutputType outputType)
         {
             _configuration = configuration;
             _outputType = outputType;
             _randomRegex = new Regex(@"##RANDOM\((\d+),\s*(\d+)\)##");
-            _random = new Random();
             _listCollection = listCollection;
         }
 
@@ -62,15 +61,27 @@ namespace BulkDataLoader
             };
         }
 
-        private static string GetDateTime(Column column)
+        private string GetDateTime(Column column)
         {
-            return (column.Value.ToString().ToUpper()) switch
+            var calculatedDate = (column.Value.ToString().ToUpper()) switch
             {
-                "NOW" => DateTime.Now.ToString(DateTimeFormat),
-                "YESTERDAY" => DateTime.Now.AddDays(-1).ToString(DateTimeFormat),
-                "TOMORROW" => DateTime.Now.AddDays(1).ToString(DateTimeFormat),
-                _ => DateTime.Parse(column.Value.ToString()).ToString(DateTimeFormat),
+                "NOW" => DateTime.Now,
+                "YESTERDAY" => DateTime.Now.AddDays(-1),
+                "TOMORROW" => DateTime.Now.AddDays(1),
+                _ => DateTime.Parse(column.Value.ToString()),
             };
+
+            if (column.Properties.TryGet("addDays", out int addDays))
+            {
+                calculatedDate = calculatedDate.AddDays(addDays);
+            }
+
+            if (column.Properties.TryGet("addHours", out int addHours))
+            {
+                calculatedDate = calculatedDate.AddHours(addHours);
+            }
+
+            return calculatedDate.ToString(DateTimeFormat);
         }
 
         private static string GenerateGuid(Column column, int index)
@@ -91,8 +102,8 @@ namespace BulkDataLoader
             }
 
             var minValue = column.Properties.Get("minValue", int.MinValue);
-            var maxValue = column.Properties.Get("maxValue", int.MaxValue - 1);
-
+            var maxValue = Math.Min(column.Properties.Get("maxValue", int.MaxValue), int.MaxValue -1);
+            
             return _random.Next(minValue, maxValue + 1).ToString();
         }
 
@@ -102,8 +113,8 @@ namespace BulkDataLoader
             {
                 return "0";
             }
-            
-            return ((string)column.Value).ToLower()  == "true" || (string)column.Value == "1" ? "1" : "0";
+
+            return ((string)column.Value).ToLower() == "true" || (string)column.Value == "1" ? "1" : "0";
         }
 
         private string GetFixedValue(Column column, int index)

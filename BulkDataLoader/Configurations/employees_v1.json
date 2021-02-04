@@ -31,6 +31,11 @@
       "value": "{city}"
     },
     {
+      "name": "PostalCode",
+      "type": "string",
+      "value": "GU##RANDOM(1,46)## ##RANDOM(1,9)##AB"
+    },
+    {
       "name": "Country",
       "type": "string",
       "value": "United Kingdom"

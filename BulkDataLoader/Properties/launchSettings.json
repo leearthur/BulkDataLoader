@@ -2,7 +2,7 @@
   "profiles": {
     "BulkDataLoader": {
       "commandName": "Project",
-      "commandLineArgs": "-Generate Products 10"
+      "commandLineArgs": "-Create northwind.region"
     }
   }
 }

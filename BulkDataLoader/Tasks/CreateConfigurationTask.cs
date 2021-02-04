@@ -36,7 +36,8 @@ namespace BulkDataLoader.Tasks
             {
                 Name = col.ColumnName,
                 Type = MapDataType(col),
-                Value = MapDefaultValue(col),
+                Value = MapValue(col),
+                Default = MapDefault(col),
                 Properties = MapDefaultProperties(col)
             });
 
@@ -49,7 +50,7 @@ namespace BulkDataLoader.Tasks
         private async Task<IEnumerable<SchemaColumn>> GetColumnData()
         {
             var sql =
-                "SELECT COLUMN_NAME ColumnName, DATA_TYPE DataType, IS_NULLABLE = 'NO' NotNull  " +
+                "SELECT COLUMN_NAME ColumnName, DATA_TYPE DataType, IS_NULLABLE = 'NO' NotNull, COLUMN_DEFAULT DefaultValue  " +
                 "FROM information_schema.COLUMNS " +
                 "WHERE EXTRA != 'auto_increment' " +
                 "AND TABLE_NAME = @TableName ";
@@ -73,7 +74,7 @@ namespace BulkDataLoader.Tasks
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 Formatting = Formatting.Indented,
-                DefaultValueHandling = DefaultValueHandling.Ignore
+                DefaultValueHandling = DefaultValueHandling.Ignore,
             });
 
             var configFile = new FileInfo($@"{Configuration.Location}\Configurations\{Configuration.Name}.json");
@@ -115,13 +116,14 @@ namespace BulkDataLoader.Tasks
                 case "int":
                 case "bigint":
                 case "decimal":
+                case "double":
                     return "numeric";
 
                 default: return "unknown";
             }
         }
 
-        private static string MapDefaultValue(SchemaColumn column)
+        private static string MapValue(SchemaColumn column)
         {
             switch (column.DataType)
             {
@@ -136,6 +138,42 @@ namespace BulkDataLoader.Tasks
             }
 
             return null;
+        }
+
+        private object MapDefault(SchemaColumn column)
+        {
+            if (column.DefaultValue == null)
+            {
+                return null;
+            }
+
+            switch (column.DataType)
+            {
+                case "text":
+                case "varchar":
+                case "date":
+                case "datetime":
+                case "timestamp":
+                    return column.DefaultValue;
+
+                case "bit":
+                case "tinyint":
+                case "smallint":
+                case "mediumint":
+                case "int":
+                    return int.Parse(column.DefaultValue);
+
+                case "bigint":
+                    return long.Parse(column.DefaultValue);
+
+                case "decimal":
+                    return decimal.Parse(column.DefaultValue);
+
+                case "double":
+                    return double.Parse(column.DefaultValue);
+
+                default: return null;
+            }
         }
 
         private static Dictionary<string, object> MapDefaultProperties(SchemaColumn column)
@@ -180,5 +218,6 @@ namespace BulkDataLoader.Tasks
         public string ColumnName { get; set; }
         public string DataType { get; set; }
         public bool NotNull { get; set; }
+        public string DefaultValue { get; set; }
     }
 }

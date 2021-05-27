@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using BulkDataLoader.Exceptions;
+using Dapper;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -19,8 +20,13 @@ namespace BulkDataLoader.Tasks
         public CreateConfigurationTask(Configuration configuration, IEnumerable<string> settings)
             : base(configuration, settings)
         {
-            Overwrite = SettingExists("Overwrite");
+            if (string.IsNullOrWhiteSpace(Configuration.TableName))
+            {
+                throw new RequestValidationException("{table-name} not specified in request");
+            }
+
             _tableInformation = new TableInformation(Configuration.TableName);
+            Overwrite = SettingExists("Overwrite");
         }
 
         public override async Task ExecuteAsync()

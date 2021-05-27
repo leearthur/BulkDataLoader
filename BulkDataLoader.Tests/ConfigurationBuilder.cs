@@ -7,6 +7,11 @@ namespace BulkDataLoader.Tests
         private Configuration _configuration;
         private List<Column> _columns;
 
+        public ConfigurationBuilder()
+        {
+            _configuration = new Configuration();
+        }
+
         public ConfigurationBuilder(string name)
         {
             _configuration = new Configuration
@@ -14,6 +19,12 @@ namespace BulkDataLoader.Tests
                 Name = name
             };
             _columns = new List<Column>();
+        }
+
+        public ConfigurationBuilder WithTableName(string tableName)
+        {
+            _configuration.TableName = tableName;
+            return this;
         }
 
         public ConfigurationBuilder AddColumn(string name, string type) => AddColumn(name, type, null);

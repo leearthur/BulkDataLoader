@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using BulkDataLoader.Exceptions;
+using Dapper;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
@@ -38,11 +39,15 @@ namespace BulkDataLoader
 
         public static async Task<Configuration> Load(string name)
         {
-            var configFile = new FileInfo($@"{Location}\Configurations\{name}.json");
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new RequestValidationException("No {configureation-name} specified.");
+            }
 
+            var configFile = new FileInfo($@"{Location}\Configurations\{name}.json");
             if (!configFile.Exists)
             {
-                throw new ArgumentException($"Specified configuration '{name}' does not exist.");
+                throw new RequestValidationException($"Specified {{configuration-name}} '{name}' does not exist.");
             }
 
             using var stream = configFile.OpenText();

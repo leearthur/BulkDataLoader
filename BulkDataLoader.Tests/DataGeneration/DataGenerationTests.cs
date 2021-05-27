@@ -4,7 +4,7 @@ using System;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace BulkDataLoader.Tests
+namespace BulkDataLoader.Tests.DataGeneration
 {
     public class DataGenerationTests
     {

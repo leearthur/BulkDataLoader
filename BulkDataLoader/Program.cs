@@ -1,4 +1,5 @@
-﻿using BulkDataLoader.Tasks;
+﻿using BulkDataLoader.Exceptions;
+using BulkDataLoader.Tasks;
 using Serilog;
 using System;
 using System.Diagnostics;
@@ -29,9 +30,13 @@ namespace BulkDataLoader
                     Log.Information($"Execution Time: {executionTime} seconds");
                 }
             }
+            catch (RequestValidationException ex)
+            {
+                Log.Error($"Request Validation Exception:\n{ex.Message}");
+            }
             catch (Exception ex)
             {
-                Log.Error(ex, "An error occured");
+                Log.Error(ex, "System Error:");
             }
         }
     }

@@ -2,7 +2,7 @@
   "profiles": {
     "BulkDataLoader": {
       "commandName": "Project",
-      "commandLineArgs": "-Create northwind.order_details -Overwrite"
+      "commandLineArgs": "-generate orders"
     }
   }
 }

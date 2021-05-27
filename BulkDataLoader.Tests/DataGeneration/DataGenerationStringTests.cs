@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace BulkDataLoader.Tests
+namespace BulkDataLoader.Tests.DataGeneration
 {
     public class DataGenerationStringTests
     {

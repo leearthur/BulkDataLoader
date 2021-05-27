@@ -11,19 +11,19 @@ namespace BulkDataLoader
     public class DataGenerator
     {
         public const string DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+        public IListCollection ListCollection { get; }
 
         private readonly Configuration _configuration;
-        private readonly IListCollection _listCollection;
         private readonly OutputType _outputType;
         private readonly Regex _randomRegex;
-        private static readonly Random _random = new Random();
+        private static readonly Random _random = new();
 
         public DataGenerator(Configuration configuration, IListCollection listCollection, OutputType outputType)
         {
             _configuration = configuration;
             _outputType = outputType;
             _randomRegex = new Regex(@"##RANDOM\((\d+),\s*(\d+)\)##");
-            _listCollection = listCollection;
+            ListCollection = listCollection;
         }
 
         public async Task<IEnumerable<DataRow>> GenerateRowsAsync(int count, char quote)
@@ -35,7 +35,7 @@ namespace BulkDataLoader
                 return new DataRow[0];
             }
 
-            await _listCollection.LoadAsync(_configuration);
+            await ListCollection.LoadAsync(_configuration);
 
             var data = new List<DataRow>();
             for (var index = 0; index < count; index++)
@@ -140,11 +140,11 @@ namespace BulkDataLoader
         private string GetListValue(Column column, int index)
         {
             var value = column.Value.ToString();
-            var items = ListCollection.ExtractListNames(value);
+            var items = Lists.ListCollection.ExtractListNames(value);
 
             foreach (var listName in items)
             {
-                value = value.Replace(listName, _listCollection.Get(listName[1..^1]));
+                value = value.Replace(listName, ListCollection.Get(listName[1..^1]));
             }
 
             return value;

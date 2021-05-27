@@ -1,5 +1,4 @@
-﻿using BulkDataLoader.Lists;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,12 +23,16 @@ namespace BulkDataLoader.Tasks
 
         public static async Task<IApplicationTask> GetTaskInstanceAsync(string[] args)
         {
-            var taskName = args.Length > 0 ? args[0].ToLower() : null;
-            var listCollection = new ListCollection();
+            if (args == null || !args.Any())
+            {
+                return new HelpTask();
+            }
+
+            var taskName = args[0]?.ToLower();
             return taskName switch
             {
                 "--version" => new VersionTask(),
-                "-generate" => new GenerateDataTask(await Configuration.Load(args[1]), args.Skip(2), listCollection),
+                "-generate" => new GenerateDataTask(await Configuration.Load(args[1]), args.Skip(2)),
                 "-load" => new DataLoadTask(await Configuration.Load(args[1]), args.Skip(2)),
                 "-create" => new CreateConfigurationTask(new Configuration
                 {

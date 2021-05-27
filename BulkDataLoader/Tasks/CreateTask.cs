@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace BulkDataLoader.Tasks
 {
-    public class CreateConfigurationTask : ApplicationTask
+    public class CreateTask : ApplicationTask
     {
         public bool Overwrite { get; }
 
         private readonly TableInformation _tableInformation;
 
-        public CreateConfigurationTask(Configuration configuration, IEnumerable<string> settings)
+        public CreateTask(Configuration configuration, IEnumerable<string> settings)
             : base(configuration, settings)
         {
             if (string.IsNullOrWhiteSpace(Configuration.TableName))

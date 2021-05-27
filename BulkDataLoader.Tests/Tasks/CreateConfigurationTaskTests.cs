@@ -15,7 +15,7 @@ namespace BulkDataLoader.Tests.Tasks
         public void InvalidTable_ReuqestValidationExceptionThrown(string tableName)
         {
             var config = new ConfigurationBuilder().WithTableName(tableName).Build();
-            Assert.Throws<RequestValidationException>(() => new CreateConfigurationTask(config, Array.Empty<string>()));
+            Assert.Throws<RequestValidationException>(() => new CreateTask(config, Array.Empty<string>()));
         }
         #endregion
     }

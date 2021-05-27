@@ -32,9 +32,9 @@ namespace BulkDataLoader.Tasks
             return taskName switch
             {
                 "--version" => new VersionTask(),
-                "-generate" => new GenerateDataTask(await Configuration.Load(args[1]), args.Skip(2)),
-                "-load" => new DataLoadTask(await Configuration.Load(args[1]), args.Skip(2)),
-                "-create" => new CreateConfigurationTask(new Configuration
+                "-generate" => new GenerateTask(await Configuration.Load(args[1]), args.Skip(2)),
+                "-load" => new LoadTask(await Configuration.Load(args[1]), args.Skip(2)),
+                "-create" => new CreateTask(new Configuration
                 {
                     TableName = args[1]
                 }, args.Skip(2)),

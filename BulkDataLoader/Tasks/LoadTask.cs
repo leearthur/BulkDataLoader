@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace BulkDataLoader.Tasks
 {
-    public class DataLoadTask : ApplicationTask
+    public class LoadTask : ApplicationTask
     {
         private readonly OutputType _outputType;
 
-        public DataLoadTask(Configuration configuration, IEnumerable<string> settings)
+        public LoadTask(Configuration configuration, IEnumerable<string> settings)
             : base(configuration, settings)
         {
             _outputType = SettingExists("Sql")

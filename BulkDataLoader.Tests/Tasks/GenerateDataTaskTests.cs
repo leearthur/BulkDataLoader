@@ -12,14 +12,14 @@ namespace BulkDataLoader.Tests.Tasks
         public void NoRecordCount_ReuqestValidationExceptionThrown()
         {
             var config = new ConfigurationBuilder("orders").Build();
-            Assert.Throws<RequestValidationException>(() => new GenerateDataTask(config, Array.Empty<string>()));
+            Assert.Throws<RequestValidationException>(() => new GenerateTask(config, Array.Empty<string>()));
         }
 
         [Fact]
         public void InvalidRecordCount_ReuqestValidationExceptionThrown()
         {
             var config = new ConfigurationBuilder("orders").Build();
-            Assert.Throws<RequestValidationException>(() => new GenerateDataTask(config, new[] { "A" }));
+            Assert.Throws<RequestValidationException>(() => new GenerateTask(config, new[] { "A" }));
         }
         #endregion
     }

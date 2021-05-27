@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace BulkDataLoader.Tasks
 {
-    public class GenerateDataTask : ApplicationTask
+    public class GenerateTask : ApplicationTask
     {
         private readonly DataGenerator _dataGenerator;
         private readonly int _count;
         private readonly FileMode _fileMode;
         private readonly OutputType _outputType;
 
-        public GenerateDataTask(Configuration configuration, IEnumerable<string> settings)
+        public GenerateTask(Configuration configuration, IEnumerable<string> settings)
             : base(configuration, settings)
         {
             if (!settings.Any())

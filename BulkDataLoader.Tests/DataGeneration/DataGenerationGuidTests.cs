@@ -9,8 +9,8 @@ namespace BulkDataLoader.Tests.DataGeneration
 {
     public class DataGenerationGuidTests
     {
-        private Configuration _configuration;
-        private Mock<IListCollection> _listCollectionMock;
+        private readonly Configuration _configuration;
+        private readonly Mock<IListCollection> _listCollectionMock;
 
         public DataGenerationGuidTests()
         {

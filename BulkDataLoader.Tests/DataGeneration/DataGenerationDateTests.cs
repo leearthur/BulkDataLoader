@@ -11,12 +11,10 @@ namespace BulkDataLoader.Tests.DataGeneration
 {
     public class DataGenerationDateTests
     {
-        private Configuration _configuration;
-        private Mock<IListCollection> _listCollectionMock;
+        private readonly Mock<IListCollection> _listCollectionMock;
 
         public DataGenerationDateTests()
         {
-            _configuration = new Configuration();
             _listCollectionMock = new Mock<IListCollection>();
         }
 
@@ -148,7 +146,7 @@ namespace BulkDataLoader.Tests.DataGeneration
             Assert.Equal(responseDate.Date, expectedDate.Date);
         }
 
-        private DateTime ParseDateString(DataColumn data)
+        private static DateTime ParseDateString(DataColumn data)
         {
             return DateTime.ParseExact(data.Value.StripQuotes(), DataGenerator.DateTimeFormat, CultureInfo.InvariantCulture);
         }

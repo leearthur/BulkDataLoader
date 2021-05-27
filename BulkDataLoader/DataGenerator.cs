@@ -32,7 +32,7 @@ namespace BulkDataLoader
 
             if (count == 0)
             {
-                return new DataRow[0];
+                return Array.Empty<DataRow>();
             }
 
             await ListCollection.LoadAsync(_configuration);
@@ -61,7 +61,7 @@ namespace BulkDataLoader
             };
         }
 
-        private string GetDateTime(Column column)
+        private static string GetDateTime(Column column)
         {
             var calculatedDate = (column.Value.ToString().ToUpper()) switch
             {
@@ -107,7 +107,7 @@ namespace BulkDataLoader
             return _random.Next(minValue, maxValue + 1).ToString();
         }
 
-        private string GetBooleanValue(Column column)
+        private static string GetBooleanValue(Column column)
         {
             if (column.Value == null)
             {
@@ -150,7 +150,7 @@ namespace BulkDataLoader
             return value;
         }
 
-        private string GetIndexValue(Column column, int index)
+        private static string GetIndexValue(Column column, int index)
         {
             var startValue = column.Properties.Get("indexStartValue", 0);
             var maxValue = column.Properties.Get("indexMaxValue", int.MaxValue);
@@ -171,7 +171,7 @@ namespace BulkDataLoader
                 : value;
         }
 
-        private string SurroundWithQuotes(string value, char quote)
+        private static string SurroundWithQuotes(string value, char quote)
         {
             return value != null
                 ? $"{quote}{value}{quote}"

@@ -9,12 +9,10 @@ namespace BulkDataLoader.Tests.DataGeneration
 {
     public class DataGenerationStringTests
     {
-        private Configuration _configuration;
-        private Mock<IListCollection> _listCollectionMock;
+        private readonly Mock<IListCollection> _listCollectionMock;
 
         public DataGenerationStringTests()
         {
-            _configuration = new Configuration();
             _listCollectionMock = new Mock<IListCollection>();
         }
 

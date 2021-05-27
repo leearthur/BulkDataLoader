@@ -4,8 +4,8 @@ namespace BulkDataLoader.Tests
 {
     public class ConfigurationBuilder
     {
-        private Configuration _configuration;
-        private List<Column> _columns;
+        private readonly Configuration _configuration;
+        private readonly List<Column> _columns;
 
         public ConfigurationBuilder()
         {

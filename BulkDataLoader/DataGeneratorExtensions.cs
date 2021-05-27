@@ -9,7 +9,7 @@
             {
                 return value;
             }
-            var result = value.Substring(0, position) + newValue + value.Substring(position + oldValue.Length);
+            var result = value.Substring(0, position) + newValue + value[(position + oldValue.Length)..];
             return result;
         }
     }

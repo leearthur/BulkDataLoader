@@ -102,84 +102,42 @@ namespace BulkDataLoader.Tasks
 
         private static string MapDataType(SchemaColumn column)
         {
-            switch (column.DataType)
+            return column.DataType switch
             {
-                case "text":
-                case "varchar":
-                    return "string";
-
-                case "date":
-                case "datetime":
-                case "timestamp":
-                    return "date";
-
-                case "bit":
-                    return "boolean";
-
-                case "tinyint":
-                case "smallint":
-                case "mediumint":
-                case "int":
-                case "bigint":
-                case "decimal":
-                case "double":
-                    return "numeric";
-
-                default: return "unknown";
-            }
+                "text" or "varchar" => "string",
+                "date" or "datetime" or "timestamp" => "date",
+                "bit" => "boolean",
+                "tinyint" or "smallint" or "mediumint" or "int" or "bigint" or "decimal" or "double" => "numeric",
+                _ => "unknown",
+            };
         }
 
         private static string MapValue(SchemaColumn column)
         {
-            switch (column.DataType)
+            return column.DataType switch
             {
-                case "text":
-                case "varchar":
-                    return column.NotNull ? string.Empty : null;
-
-                case "date":
-                case "datetime":
-                case "timestamp":
-                    return "NOW";
-            }
-
-            return null;
+                "text" or "varchar" => column.NotNull ? string.Empty : null,
+                "date" or "datetime" or "timestamp" => "NOW",
+                _ => null,
+            };
         }
 
-        private object MapDefault(SchemaColumn column)
+        private static object MapDefault(SchemaColumn column)
         {
             if (column.DefaultValue == null)
             {
                 return null;
             }
 
-            switch (column.DataType)
+            return column.DataType switch
             {
-                case "text":
-                case "varchar":
-                case "date":
-                case "datetime":
-                case "timestamp":
-                    return column.DefaultValue;
-
-                case "bit":
-                case "tinyint":
-                case "smallint":
-                case "mediumint":
-                case "int":
-                    return int.Parse(column.DefaultValue);
-
-                case "bigint":
-                    return long.Parse(column.DefaultValue);
-
-                case "decimal":
-                    return decimal.Parse(column.DefaultValue);
-
-                case "double":
-                    return double.Parse(column.DefaultValue);
-
-                default: return null;
-            }
+                "text" or "varchar" or "date" or "datetime" or "timestamp" => column.DefaultValue,
+                "bit" or "tinyint" or "smallint" or "mediumint" or "int" => int.Parse(column.DefaultValue),
+                "bigint" => long.Parse(column.DefaultValue),
+                "decimal" => decimal.Parse(column.DefaultValue),
+                "double" => double.Parse(column.DefaultValue),
+                _ => null,
+            };
         }
 
         private static Dictionary<string, object> MapDefaultProperties(SchemaColumn column)

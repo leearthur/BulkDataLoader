@@ -16,7 +16,7 @@ namespace BulkDataLoader.Tasks
         protected ApplicationTask(Configuration configuration, IEnumerable<string> settings)
         {
             Configuration = configuration;
-            Settings = settings?.ToArray() ?? new string[0];
+            Settings = settings?.ToArray() ?? Array.Empty<string>();
         }
 
         public abstract Task ExecuteAsync();

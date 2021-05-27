@@ -13,7 +13,11 @@
     {
       "name": "GlobalId",
       "type": "guid",
-      "value": "INDEXED"
+      "value": "INDEXED",
+      "properties": {
+        "indexStartValue": 20015998343868,
+        "guidIndex": 1
+      }
     },
     {
       "name": "CompanyName",

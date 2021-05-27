@@ -88,7 +88,11 @@ namespace BulkDataLoader
         {
             if (column.Value != null && column.Value.ToString().Equals("INDEXED", StringComparison.CurrentCultureIgnoreCase))
             {
-                return index.ToString("x8") + "-0000-0000-0000-000000000000";
+                var guidIndex = column.Properties.Get<long, string>("guidIndex", "000000000000", x => x.ToString("x12"));
+
+                var currentIndex = GetIndexValue(column, index);
+                var hexValue = currentIndex.ToString("x12");
+                return $"{hexValue[0..8]}-{hexValue[8..]}-0000-0000-{guidIndex}";
             }
 
             return Guid.NewGuid().ToString();
@@ -126,7 +130,7 @@ namespace BulkDataLoader
 
             var value = column.Value
                 .ToString()
-                .Replace("##INDEX##", GetIndexValue(column, index));
+                .Replace("##INDEX##", GetIndexValue(column, index).ToString());
 
             foreach (Match match in _randomRegex.Matches(value))
             {
@@ -150,13 +154,13 @@ namespace BulkDataLoader
             return value;
         }
 
-        private static string GetIndexValue(Column column, int index)
+        private static long GetIndexValue(Column column, int index)
         {
-            var startValue = column.Properties.Get("indexStartValue", 0);
-            var maxValue = column.Properties.Get("indexMaxValue", int.MaxValue);
+            var startValue = column.Properties.Get("indexStartValue", default(long));
+            var maxValue = column.Properties.Get("indexMaxValue", long.MaxValue);
 
             var result = Math.Min(startValue + index, maxValue);
-            return result.ToString();
+            return result;
         }
 
         private string Parse(string value)

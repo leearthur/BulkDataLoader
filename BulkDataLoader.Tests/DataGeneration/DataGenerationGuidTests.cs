@@ -48,11 +48,31 @@ namespace BulkDataLoader.Tests.DataGeneration
             Assert.Equal(rowCount, response.Length);
             for (var index = 0; index < rowCount; index++)
             {
-                var expected = $"\"{index.ToString().PadLeft(8, '0')}-0000-0000-0000-000000000000\"";
+                var expected = $"\"00000000-000{index}-0000-0000-000000000000\"";
                 var actual = response[index].Columns.Single().Value;
                 Assert.Equal(expected, actual);
                 Guid.Parse(actual[1..^1]);
             }
+        }
+
+        [Fact]
+        public async Task GenerateCsvRows_GuidGeneratedWithProperties_SingleRow()
+        {
+            var config = new ConfigurationBuilder("Test")
+                .AddColumn("RowIdentifier", "guid", "INDEXED", new()
+                {
+                    { "indexStartValue", "10" },
+                    { "guidIndex", "1" }
+                });
+
+            var target = new DataGenerator(config.Build(), _listCollectionMock.Object, OutputType.Csv);
+
+            var response = await target.GenerateRowsAsync(1, '"');
+
+            var expected = "\"00000000-000a-0000-0000-000000000001\"";
+            var actual = response.Single().Columns.Single().Value;
+            Assert.Equal(expected, actual);
+            Guid.Parse(actual[1..^1]);
         }
     }
 }

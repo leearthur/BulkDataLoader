@@ -1,5 +1,5 @@
 ﻿# Bulk Data Loader
-Tool to create and load test data in bulk into a MySQL database.
+Lightweight tool to generate and bulk load test data into a MySQL database.
 
 ## Operations
 ### Generate

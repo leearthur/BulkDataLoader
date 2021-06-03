@@ -34,8 +34,7 @@ Create a basic configuration file based on the table structure. Auto_Increment c
 |-Overwrite|Overwrite existing file.|
 
 ### MySQL 
-To bulk load data into MySQL, the output file needs to be in a folder which the MySQL process has access to. 
-By default, on development Windows machines this location is: 
+To bulk load data into MySQL, the output file needs to be in a folder which the MySQL process has access to. By default, on development Windows, this location is: 
 ```
 C:\ProgramData\MySQL\MySQL Server 5.7\Uploads\
 ```

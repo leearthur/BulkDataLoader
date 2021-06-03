@@ -41,7 +41,7 @@ namespace BulkDataLoader.DataWriters
             }
 
             sql.Remove(sql.Length - 3, 3);
-            sql.Append(";");
+            sql.Append(';');
 
             var bytes = encoder.GetBytes(sql.ToString());
             await stream.WriteAsync(bytes);

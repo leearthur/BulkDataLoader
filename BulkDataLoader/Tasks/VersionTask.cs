@@ -7,7 +7,7 @@ namespace BulkDataLoader.Tasks
     public class VersionTask : ApplicationTask
     {
         public VersionTask()
-            :base(null, null)
+            : base(null, null)
         {
         }
 

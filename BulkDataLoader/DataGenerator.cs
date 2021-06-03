@@ -106,8 +106,8 @@ namespace BulkDataLoader
             }
 
             var minValue = column.Properties.Get("minValue", int.MinValue);
-            var maxValue = Math.Min(column.Properties.Get("maxValue", int.MaxValue), int.MaxValue -1);
-            
+            var maxValue = Math.Min(column.Properties.Get("maxValue", int.MaxValue), int.MaxValue - 1);
+
             return _random.Next(minValue, maxValue + 1).ToString();
         }
 

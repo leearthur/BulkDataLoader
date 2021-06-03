@@ -15,7 +15,6 @@ namespace BulkDataLoader.Tests
             {
                 return dateTime;
             }
-            //var result = dateTime.AddTicks(-(dateTime.Ticks % TimeSpan.FromMilliseconds(1).Ticks));
             var result = new DateTime(dateTime.Ticks - (dateTime.Ticks % TimeSpan.FromSeconds(1).Ticks), dateTime.Kind);
 
             return result;

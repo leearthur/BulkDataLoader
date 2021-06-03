@@ -1,5 +1,4 @@
-﻿using Serilog;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 
 namespace BulkDataLoader.Tasks
@@ -15,7 +14,7 @@ namespace BulkDataLoader.Tasks
 
         public override Task ExecuteAsync()
         {
-            const string helpText = 
+            const string helpText =
                 "Usage: BulkDataLoader.exe [-{task-name}]\n" +
                 "Tasks:\n" +
                 "  -generate {configureation-name} {record-count} [-Append] [-Sql]\n" +

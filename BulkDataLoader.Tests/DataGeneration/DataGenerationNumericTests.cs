@@ -66,7 +66,7 @@ namespace BulkDataLoader.Tests.DataGeneration
             Assert.Equal(2, values.Count());
             Assert.Contains(values, v => v.Key == "0");
             Assert.Contains(values, v => v.Key == "1");
-        }        
+        }
 
         [Fact]
         public async Task GenerateCsvRows_NumericIndex_MultipleRows()

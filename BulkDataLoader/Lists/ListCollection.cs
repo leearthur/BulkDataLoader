@@ -19,7 +19,7 @@ namespace BulkDataLoader.Lists
     public class ListCollection : IListCollection
     {
         public Dictionary<string, IEnumerable<string>> Lists { get; } = new Dictionary<string, IEnumerable<string>>();
-        private Random _random = new Random();
+        private readonly Random _random = new();
 
         public async Task LoadAsync(Configuration configuration)
         {
